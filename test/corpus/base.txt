@@ -1,0 +1,73 @@
+===============================================================================
+Header & body
+===============================================================================
+From: csp
+
+body
+
+---
+(rfc5322_message
+  (headers
+    (header_from
+      (correspondent)))
+  (body_separator)
+  (body))
+
+===============================================================================
+Header fields
+===============================================================================
+From: csp
+To: csp, csp
+Subject: subject
+Other: other
+
+---
+(rfc5322_message
+  (headers
+    (header_from
+      (correspondent))
+    (header_email
+      (correspondent)
+      (correspondent))
+    (header_subject
+      (subject))
+    (header_other
+      (contents))))
+
+===============================================================================
+Multi-line headers
+===============================================================================
+To: csp, csp,
+  csp
+Subject: Subject multiline across
+  lines
+X-Foo: Foo
+  Bar
+
+---
+(rfc5322_message
+  (headers
+    (header_email
+      (correspondent)
+      (correspondent)
+      (correspondent))
+    (header_subject
+      (subject))
+    (header_other
+      (contents))))
+
+===============================================================================
+Empty
+===============================================================================
+
+---
+(ERROR)
+
+===============================================================================
+No header, just body
+===============================================================================
+
+body
+---
+(ERROR)
+

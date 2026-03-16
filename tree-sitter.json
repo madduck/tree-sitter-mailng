@@ -1,0 +1,40 @@
+{
+  "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
+  "grammars": [
+    {
+      "name": "mailng",
+      "camelcase": "MailNG",
+      "title": "Mail NG",
+      "scope": "source.mailng",
+      "file-types": [
+        "mail"
+      ],
+      "injection-regex": "^mailng$",
+      "class-name": "TreeSitterMailng"
+    }
+  ],
+  "metadata": {
+    "version": "0.1.0",
+    "license": "MIT",
+    "description": "An RFC5322 (email) message file parser",
+    "authors": [
+      {
+        "name": "martin f. krafft",
+        "email": "tree-sitter-mailng@pobox.madduck.net"
+      }
+    ],
+    "links": {
+      "repository": "https://github.com/madduck/tree-sitter-mailng"
+    }
+  },
+  "bindings": {
+    "c": true,
+    "go": true,
+    "java": false,
+    "node": true,
+    "python": true,
+    "rust": true,
+    "swift": true,
+    "zig": false
+  }
+}
