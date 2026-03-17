@@ -28,8 +28,8 @@ function header(label, contents) {
 export default grammar({
   name: "mail",
 
-  // extras: (_$) => [' '],
-  // externals: $ => [$.indent, $.dedent, $.newline],
+  // extras doesn't default to nothing, so needs to be explicitly disabled
+  extras: _$ => [],
 
   rules: {
     rfc5322_message: $ =>
