@@ -64,7 +64,6 @@ export default grammar({
     ),
 
     // Each header consists of a label, followed by a colon, and optional whitespace:
-    _header_label: _$ => /[-\w]+/,
     _header_separator: _$ => /:[ \t]*/,
 
     // The date header uses a standard RFC5322 format
@@ -82,7 +81,14 @@ export default grammar({
       $._date_time, repeat1($._ws_no_nl),
       choice("GMT", $._date_tzoffset)
     ),
-    header_date: $ => seq("Date", $._header_separator, $.date),
+    header_date: $ => seq(token(prec(1, /[Dd][Aa][Tt][Ee]/)), $._header_separator, $.date),
+
+    // Note: case-insensitive matching requires these regexps. Using
+    // token(prec(1, …)) gives liexical preference to those over other, more
+    // generic regexps, such as the one for all the other header labels further down.
+    // We don't *need* this here since the other header labels regexp is
+    // defined later (thus gets lower lexical precedence), but it's good
+    // practice to make this explicit.
 
     // Correspondents — for now, lines can split only after the comma used to
     // separate multiple correspondents.
@@ -91,16 +97,17 @@ export default grammar({
     _one_or_more_correspondents: $ => seq($.correspondent, repeat(seq($._comma_continued, optional($.correspondent)))),
 
     // The From and Reply-To headers, only special as we might want to syntax highlight it
-    header_from: $ => seq(/[Ff][Rr][Oo][Mm]/, $._header_separator, $._one_or_more_correspondents),
-    header_replyto: $ => seq(/[Rr][Ee][Pp][Ll][Yy]-[Tt][Oo]/, $._header_separator, $._one_or_more_correspondents),
+    header_from: $ => seq(token(prec(1, /[Ff][Rr][Oo][Mm]/)), $._header_separator, $._one_or_more_correspondents),
+    header_replyto: $ => seq(token(prec(1, /[Rr][Ee][Pp][Ll][Yy]-[Tt][Oo]/)), $._header_separator, $._one_or_more_correspondents),
 
     // … and the recipient headers
-    header_email: $ => seq(choice(/[Tt][Oo]/, /[Cc]{2}/, /[Bb][Cc]{2}/), $._header_separator, $._one_or_more_correspondents),
+    header_email: $ => seq(token(prec(1, /[Tt][Oo]|[Cc]{2}|[Bb][Cc]{2}/)), $._header_separator, $._one_or_more_correspondents),
 
     // Other header contents can flow to the next line if such starts with whitespace
     multiline_contents: _$ => /.+(\r?\n[ \t]+.+)*/,
 
-    header_subject: $ => seq("Subject", $._header_separator, alias($.multiline_contents, $.subject)),
-    header_other: $ => seq($._header_label, $._header_separator, alias($.multiline_contents, $.contents)),
+    header_subject: $ => seq(token(prec(1, /[Ss][Uu][Bb][Jj][Ee][Cc][Tt]/)), $._header_separator, alias($.multiline_contents, $.subject)),
+
+    header_other: $ => seq(/[-\w]+/, $._header_separator, alias($.multiline_contents, $.contents)),
   }
 });
