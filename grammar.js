@@ -38,7 +38,7 @@ export default grammar({
         optional(
           seq(
             $.body_separator,
-            $.body
+            optional($.body)
           )
         )
       ),
