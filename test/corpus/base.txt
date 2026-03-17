@@ -1,7 +1,7 @@
 ===============================================================================
 Header & body
 ===============================================================================
-From: csp
+From: csp@example.org
 
 body
 
@@ -9,15 +9,16 @@ body
 (rfc5322_message
   (headers
     (header_from
-      (correspondent)))
+      (correspondent
+        (email_address))))
   (body_separator)
   (body))
 
 ===============================================================================
 Header fields
 ===============================================================================
-From: csp
-To: csp, csp
+From: foo@example.org
+To: bar@example.net, baz@example.net
 Subject: subject
 Date: Tue, 17 Mar 2026 15:27:34 +0100
 Other: other
@@ -26,10 +27,13 @@ Other: other
 (rfc5322_message
   (headers
     (header_from
-      (correspondent))
+      (correspondent
+        (email_address)))
     (header_email
-      (correspondent)
-      (correspondent))
+      (correspondent
+        (email_address))
+      (correspondent
+        (email_address)))
     (header_subject
       (subject))
     (header_date
@@ -49,10 +53,25 @@ Date: Tue, 17 Mar 2026 15:27:34 GMT
       (date))))
 
 ===============================================================================
+Multi-line correspondents
+===============================================================================
+To: foo@example.org, foo@example.net,
+  bar@example.net
+
+---
+(rfc5322_message
+  (headers
+    (header_email
+      (correspondent
+        (email_address))
+      (correspondent
+        (email_address))
+      (correspondent
+        (email_address)))))
+
+===============================================================================
 Multi-line headers
 ===============================================================================
-To: csp, csp,
-  csp
 Subject: Subject multiline across
   lines
 X-Foo: Foo
@@ -61,16 +80,25 @@ X-Foo: Foo
 ---
 (rfc5322_message
   (headers
-    (header_email
-      (correspondent)
-      (correspondent)
-      (correspondent))
     (header_subject
       (subject))
     (header_other
       (contents))))
 
 ===============================================================================
+Incomplete continuation of correpondents
 ===============================================================================
+To: foo@example.org, bar@example.org, 
+  
+Subject: subject
 
 ---
+(rfc5322_message
+  (headers
+    (header_email
+      (correspondent
+        (email_address))
+      (correspondent
+        (email_address)))
+    (header_subject
+      (subject))))

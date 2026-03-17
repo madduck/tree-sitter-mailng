@@ -1,0 +1,23 @@
+===============================================================================
+Just email address
+===============================================================================
+From: foo@example.org
+
+---
+(rfc5322_message
+  (headers
+    (header_from
+      (correspondent
+        (email_address)))))
+
+===============================================================================
+Bracketed email address
+===============================================================================
+From: <foo@example.org>
+
+---
+(rfc5322_message
+  (headers
+    (header_from
+      (correspondent
+        (email_address)))))

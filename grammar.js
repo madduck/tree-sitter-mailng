@@ -57,8 +57,14 @@ export default grammar({
     _header_label: _$ => /[-\w]+/,
     _header_separator: _$ => /:[ \t]*/,
 
-    // TODO:this needs to be fleshed out, postponing for now as this is going to be hard.
-    correspondent: _$ => token(/[a-z]+/),
+    // Regex from https://stackoverflow.com/a/26989421
+    email_address: _$ => /((([\t ]*\r\n)?[\t ]+)?[-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*(([\t ]*\r\n)?[\t ]+)?|(([\t ]*\r\n)?[\t ]+)?"(((([\t ]*\r\n)?[\t ]+)?([]!#-[^-~]|(\\[\t -~])))+(([\t ]*\r\n)?[\t ]+)?|(([\t ]*\r\n)?[\t ]+)?)"(([\t ]*\r\n)?[\t ]+)?)@((([\t ]*\r\n)?[\t ]+)?[-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*(([\t ]*\r\n)?[\t ]+)?|(([\t ]*\r\n)?[\t ]+)?\[((([\t ]*\r\n)?[\t ]+)?[!-Z^-~])*(([\t ]*\r\n)?[\t ]+)?](([\t ]*\r\n)?[\t ]+)?)/,
+    _br_email_address: $ => seq("<", $.email_address, ">"),
+
+    correspondent: $ => choice(
+      $._br_email_address,
+      $.email_address,
+    ),
 
     // The From header just has one correspondent (TODO: could actually have more, and should be fused)
     header_from: $ => seq("From", $._header_separator, $.correspondent),
