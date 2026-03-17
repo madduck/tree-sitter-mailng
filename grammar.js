@@ -21,24 +21,24 @@ export default grammar({
         $.headers,
         optional(
           seq(
-            $.body_separator,
+            // The body separator is just an empty line. Depending on the
+            // file format, this could include a line-feed or not
+            alias($._newline, $.body_separator),
             optional($.body)
           )
         )
       ),
 
-    _ws_no_nl: _$ => /[ \t]+/,
+    _ws_no_nl: _$ => /[ \t]/,
+    _newline: _$ => /\r?\n/,
+    _line_continuation: $ => prec.left(seq(optional(seq(repeat($._ws_no_nl), $._newline)), repeat1($._ws_no_nl))),
 
     // Headers is a collection of one or more _header instances
     headers: $ => repeat1($._header),
 
-    // The body separator is just an empty line. Depending on the
-    // file format, this could include a line-feed or not
-    body_separator: _$ => /\r?\n/,
-
     // The body is a collection of blocks and could be empty
     body: $ => repeat1($._block),
-    _block: _$ => /.+\r?\n/,
+    _block: $ => seq(/.+/, $._newline),
 
     // Each header occupies a (logical) line by itself, hence the final newline.
     // We differentiate between the different headers here mostly for enabling
@@ -50,7 +50,7 @@ export default grammar({
         $.header_email,
         $.header_subject,
         $.header_other
-      ), /\r?\n/
+      ), $._newline
     ),
 
 
@@ -64,7 +64,7 @@ export default grammar({
     ),
 
     // Each header consists of a label, followed by a colon, and optional whitespace:
-    _header_separator: _$ => /:[ \t]*/,
+    _header_separator: $ => seq(":", repeat($._ws_no_nl)),
 
     // The date header uses a standard RFC5322 format
     _date_dow: _$ => /(Mon|Tue|Wed|Thu|Fri|Sat|Sun)/,
@@ -93,7 +93,7 @@ export default grammar({
     // Correspondents — for now, lines can split only after the comma used to
     // separate multiple correspondents.
     // TODO: lines can break elsewhere too…
-    _comma_continued: _$ => /,[ \t]*(?:\r?\n[ \t]+)?/,
+    _comma_continued: $ => seq(repeat($._ws_no_nl), ",", $._line_continuation),
     _one_or_more_correspondents: $ => seq($.correspondent, repeat(seq($._comma_continued, optional($.correspondent)))),
 
     // The From and Reply-To headers, only special as we might want to syntax highlight it
@@ -104,7 +104,7 @@ export default grammar({
     header_email: $ => seq(token(prec(1, /[Tt][Oo]|[Cc]{2}|[Bb][Cc]{2}/)), $._header_separator, $._one_or_more_correspondents),
 
     // Other header contents can flow to the next line if such starts with whitespace
-    multiline_contents: _$ => /.+(\r?\n[ \t]+.+)*/,
+    multiline_contents: _$ => /.+(\r?\n[ \t]+.+)*/, // TODO: express with tokens
 
     header_subject: $ => seq(token(prec(1, /[Ss][Uu][Bb][Jj][Ee][Cc][Tt]/)), $._header_separator, alias($.multiline_contents, $.subject)),
 
