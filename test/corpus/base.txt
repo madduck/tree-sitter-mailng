@@ -19,6 +19,7 @@ Header fields
 From: csp
 To: csp, csp
 Subject: subject
+Date: Tue, 17 Mar 2026 15:27:34 +0100
 Other: other
 
 ---
@@ -31,8 +32,21 @@ Other: other
       (correspondent))
     (header_subject
       (subject))
+    (header_date
+      (date))
     (header_other
       (contents))))
+
+===============================================================================
+GMT date
+===============================================================================
+Date: Tue, 17 Mar 2026 15:27:34 GMT
+
+---
+(rfc5322_message
+  (headers
+    (header_date
+      (date))))
 
 ===============================================================================
 Multi-line headers
