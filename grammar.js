@@ -53,9 +53,6 @@ export default grammar({
       ), /\r?\n/
     ),
 
-    // Each header consists of a label, followed by a colon, and optional whitespace:
-    _header_label: _$ => /[-\w]+/,
-    _header_separator: _$ => /:[ \t]*/,
 
     // Regex from https://stackoverflow.com/a/26989421
     email_address: _$ => /((([\t ]*\r\n)?[\t ]+)?[-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*(([\t ]*\r\n)?[\t ]+)?|(([\t ]*\r\n)?[\t ]+)?"(((([\t ]*\r\n)?[\t ]+)?([]!#-[^-~]|(\\[\t -~])))+(([\t ]*\r\n)?[\t ]+)?|(([\t ]*\r\n)?[\t ]+)?)"(([\t ]*\r\n)?[\t ]+)?)@((([\t ]*\r\n)?[\t ]+)?[-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*(([\t ]*\r\n)?[\t ]+)?|(([\t ]*\r\n)?[\t ]+)?\[((([\t ]*\r\n)?[\t ]+)?[!-Z^-~])*(([\t ]*\r\n)?[\t ]+)?](([\t ]*\r\n)?[\t ]+)?)/,
@@ -66,8 +63,9 @@ export default grammar({
       $.email_address,
     ),
 
-    // The From header just has one correspondent (TODO: could actually have more, and should be fused)
-    header_from: $ => seq("From", $._header_separator, $.correspondent),
+    // Each header consists of a label, followed by a colon, and optional whitespace:
+    _header_label: _$ => /[-\w]+/,
+    _header_separator: _$ => /:[ \t]*/,
 
     // The date header uses a standard RFC5322 format
     _date_dow: _$ => /(Mon|Tue|Wed|Thu|Fri|Sat|Sun)/,
@@ -86,14 +84,18 @@ export default grammar({
     ),
     header_date: $ => seq("Date", $._header_separator, $.date),
 
-    // Other email headers take multiple correspondents. For now, lines can split only
-    // after the comma used to separate multiple correspondents. TODO: lines can break elsewhere too…
+    // Correspondents — for now, lines can split only after the comma used to
+    // separate multiple correspondents.
+    // TODO: lines can break elsewhere too…
     _comma_continued: _$ => /,[ \t]*(?:\r?\n[ \t]+)?/,
-    header_email: $ => seq(
-      choice('To', 'Cc', 'Bcc', 'Reply-To'),
-      $._header_separator,
-      seq($.correspondent, repeat(seq($._comma_continued, optional($.correspondent))))
-    ),
+    _one_or_more_correspondents: $ => seq($.correspondent, repeat(seq($._comma_continued, optional($.correspondent)))),
+
+    // The From and Reply-To headers, only special as we might want to syntax highlight it
+    header_from: $ => seq(/[Ff][Rr][Oo][Mm]/, $._header_separator, $._one_or_more_correspondents),
+    header_replyto: $ => seq(/[Rr][Ee][Pp][Ll][Yy]-[Tt][Oo]/, $._header_separator, $._one_or_more_correspondents),
+
+    // … and the recipient headers
+    header_email: $ => seq(choice(/[Tt][Oo]/, /[Cc]{2}/, /[Bb][Cc]{2}/), $._header_separator, $._one_or_more_correspondents),
 
     // Other header contents can flow to the next line if such starts with whitespace
     multiline_contents: _$ => /.+(\r?\n[ \t]+.+)*/,
