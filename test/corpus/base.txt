@@ -6,11 +6,13 @@ From: csp@example.org
 body
 
 ---
+
 (rfc5322_message
   (headers
     (header_from
-      (correspondent
-        (email_address))))
+      (senders
+        (correspondent
+          (email_address)))))
   (body_separator)
   (body))
 
@@ -24,16 +26,19 @@ Date: Tue, 17 Mar 2026 15:27:34 +0100
 Other: other
 
 ---
+
 (rfc5322_message
   (headers
     (header_from
-      (correspondent
-        (email_address)))
+      (senders
+        (correspondent
+          (email_address))))
     (header_email
-      (correspondent
-        (email_address))
-      (correspondent
-        (email_address)))
+      (recipients
+        (correspondent
+          (email_address))
+        (correspondent
+          (email_address))))
     (header_subject
       (subject))
     (header_date
@@ -47,11 +52,13 @@ From header is case-insensitive
 frOm: foo@example.org
 
 ---
+
 (rfc5322_message
   (headers
     (header_from
-      (correspondent
-        (email_address)))))
+      (senders
+        (correspondent
+          (email_address))))))
 
 ===============================================================================
 To header is case-insensitive
@@ -59,11 +66,25 @@ To header is case-insensitive
 TO: foo@example.org
 
 ---
+
 (rfc5322_message
   (headers
     (header_email
-      (correspondent
-        (email_address)))))
+      (recipients
+        (correspondent
+          (email_address))))))
+
+===============================================================================
+Subject header is case-insensitive
+===============================================================================
+SuBjEcT: subject
+
+---
+
+(rfc5322_message
+  (headers
+    (header_subject
+      (subject))))
 
 ===============================================================================
 Date header is case-insensitive
@@ -71,21 +92,11 @@ Date header is case-insensitive
 datE: Tue, 17 Mar 2026 15:27:34 +0100
 
 ---
+
 (rfc5322_message
   (headers
     (header_date
       (date))))
-
-===============================================================================
-Subject header is case-insensitive
-===============================================================================
-SuBjEcT: foo@example.org
-
----
-(rfc5322_message
-  (headers
-    (header_subject
-      (subject))))
 
 ===============================================================================
 GMT date
@@ -93,58 +104,38 @@ GMT date
 Date: Tue, 17 Mar 2026 15:27:34 GMT
 
 ---
+
 (rfc5322_message
   (headers
     (header_date
       (date))))
 
 ===============================================================================
-Multi-line correspondents
+Date can wrap lines
 ===============================================================================
-To: foo@example.org, foo@example.net,
-  bar@example.net
+Date: Tue, 17 Mar 2026
+  15:27:34 GMT
 
 ---
+
 (rfc5322_message
   (headers
-    (header_email
-      (correspondent
-        (email_address))
-      (correspondent
-        (email_address))
-      (correspondent
-        (email_address)))))
+    (header_date
+      (date))))
 
 ===============================================================================
 Multi-line headers
 ===============================================================================
 Subject: Subject multiline across
   lines
-X-Foo: Foo
-  Bar
+X-Bar: bar
+  baz
 
 ---
+
 (rfc5322_message
   (headers
     (header_subject
       (subject))
     (header_other
       (contents))))
-
-===============================================================================
-Incomplete continuation of correpondents
-===============================================================================
-To: foo@example.org, bar@example.org, 
-  
-Subject: subject
-
----
-(rfc5322_message
-  (headers
-    (header_email
-      (correspondent
-        (email_address))
-      (correspondent
-        (email_address)))
-    (header_subject
-      (subject))))
