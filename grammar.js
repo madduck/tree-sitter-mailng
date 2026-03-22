@@ -17,6 +17,7 @@ export default grammar({
     $._whitespace_except_newline,
     $._logical_linebreak,
   ],
+  conflicts: $ => [[$.name]],
 
   rules: {
     rfc5322_message: $ =>
@@ -84,36 +85,108 @@ export default grammar({
     * practice to make this explicit.
     */
 
-    // Correspondents — for now, lines can split only after the comma used to
-    // separate multiple correspondents.
+    // Correspondents
+
     // Regex from https://stackoverflow.com/a/26989421
     email_address: _$ => /((([\t ]*\r\n)?[\t ]+)?[-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*(([\t ]*\r\n)?[\t ]+)?|(([\t ]*\r\n)?[\t ]+)?"(((([\t ]*\r\n)?[\t ]+)?([]!#-[^-~]|(\\[\t -~])))+(([\t ]*\r\n)?[\t ]+)?|(([\t ]*\r\n)?[\t ]+)?)"(([\t ]*\r\n)?[\t ]+)?)@((([\t ]*\r\n)?[\t ]+)?[-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*(([\t ]*\r\n)?[\t ]+)?|(([\t ]*\r\n)?[\t ]+)?\[((([\t ]*\r\n)?[\t ]+)?[!-Z^-~])*(([\t ]*\r\n)?[\t ]+)?](([\t ]*\r\n)?[\t ]+)?)/,
-    _br_email_address: $ => seq("<", $.email_address, ">"),
-
-    correspondent: $ => choice(
-      $._br_email_address,
-      $.email_address,
-      // TODO:include names
+    _br_email_address: $ => seq(
+      "<", $.email_address, ">"
     ),
 
-    // TODO: lines can break within coresspondents too
-    _comma_separator: $ => prec.right(seq(optional($._header_contents_whitespace), ",", optional($._header_contents_whitespace))),
-    _one_or_more_correspondents: $ => prec.left(seq($.correspondent, repeat(seq($._comma_separator, optional($.correspondent))))),
+    _word: _$ => /\S+/,
+    _word_no_doublequotes: _$ => /[^"\s]+/,
+    _alnum_word: _$ => /\w+/,
+
+    name: $ =>
+      // $.name is included in conflicts above such that TS can resolve the
+      // ambiguity that arises when $.name is followed by $.whitespace.
+      seq(
+        $._alnum_word,
+        repeat(
+          seq(
+            $._header_contents_whitespace,
+            $._alnum_word
+          )
+        )
+      ),
+    quoted_name: $ =>
+      // prec.right not needed here due to the final quote
+      seq(
+        '"',
+        $._word_no_doublequotes,
+        repeat(
+          seq(
+            $._header_contents_whitespace,
+            $._word_no_doublequotes
+          )
+        ),
+        '"'
+      ),
+
+    correspondent: $ => choice(
+      $.email_address,
+      seq(
+        // This is implemented by making the name part optional:
+        optional(
+          seq(
+            choice(
+              // a name (whitespace-separated words),
+              $.name,
+              // or a quoted name (whitespace-separated words within "")
+              $.quoted_name
+            ),
+            // and some whitespace …
+            $._header_contents_whitespace
+          )
+          // note about whitespace: I need this as a token
+          // because of logical line continuations, so please don't
+          // suggest that I just match the entirety of the name with
+          // a single regex.
+        ),
+        // … before the email address in angle brackets:
+        $._br_email_address
+      ),
+    ),
+
+    _comma_separator: $ => prec.right(
+      seq(
+        optional($._header_contents_whitespace),
+        ",",
+        optional($._header_contents_whitespace))
+    ),
+    _one_or_more_correspondents: $ => prec.left(
+      seq(
+        $.correspondent,
+        repeat(seq(
+          $._comma_separator,
+          optional($.correspondent)
+        ))
+      )
+    ),
 
     // The From and Reply-To headers, only special as we might want to syntax highlight it
-    header_from: $ => seq(token(prec(1, /[Ff][Rr][Oo][Mm]/)), $._header_separator, alias($._one_or_more_correspondents, $.senders)),
-    header_replyto: $ => seq(token(prec(1, /[Rr][Ee][Pp][Ll][Yy]-[Tt][Oo]/)), $._header_separator, alias($._one_or_more_correspondents, $.replytos)),
+    header_from: $ => seq(token(prec(1, /[Ff][Rr][Oo][Mm]/)), $._header_separator,
+      alias($._one_or_more_correspondents, $.senders)
+    ),
+    header_replyto: $ => seq(token(prec(1, /[Rr][Ee][Pp][Ll][Yy]-[Tt][Oo]/)), $._header_separator,
+      alias($._one_or_more_correspondents, $.replytos)
+    ),
 
     // … and the recipient headers
-    header_email: $ => seq(token(prec(1, /[Tt][Oo]|[Cc]{2}|[Bb][Cc]{2}/)), $._header_separator, alias($._one_or_more_correspondents, $.recipients)),
+    header_email: $ => seq(token(prec(1, /[Tt][Oo]|[Cc]{2}|[Bb][Cc]{2}/)), $._header_separator,
+      alias($._one_or_more_correspondents, $.recipients)
+    ),
 
     // Other header contents can flow to the next line if such starts with whitespace
-    _word: _$ => /\S+/,
     multiline_contents: $ => seq($._word, repeat(seq($._header_contents_whitespace, $._word))),
 
-    header_subject: $ => seq(token(prec(1, /[Ss][Uu][Bb][Jj][Ee][Cc][Tt]/)), $._header_separator, alias($.multiline_contents, $.subject)),
+    header_subject: $ => seq(token(prec(1, /[Ss][Uu][Bb][Jj][Ee][Cc][Tt]/)), $._header_separator,
+      alias($.multiline_contents, $.subject)
+    ),
 
-    header_other: $ => seq(/[-\w]+/, $._header_separator, alias($.multiline_contents, $.contents)),
+    header_other: $ => seq(/[-\w]+/, $._header_separator,
+      alias($.multiline_contents, $.contents)
+    ),
 
     // The body is a collection of blocks and could be empty
     body: $ => repeat1($._block),

@@ -4,11 +4,13 @@ Just email address
 From: foo@example.org
 
 ---
+
 (rfc5322_message
   (headers
     (header_from
-      (correspondent
-        (email_address)))))
+      (senders
+        (correspondent
+          (email_address))))))
 
 ===============================================================================
 Bracketed email address
@@ -16,8 +18,152 @@ Bracketed email address
 From: <foo@example.org>
 
 ---
+
 (rfc5322_message
   (headers
     (header_from
-      (correspondent
-        (email_address)))))
+      (senders
+        (correspondent
+          (email_address))))))
+
+===============================================================================
+Email address with trailing comma
+===============================================================================
+From: <foo@example.org>,
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (senders
+        (correspondent
+          (email_address))))))
+
+===============================================================================
+Comma-separated correspondents
+===============================================================================
+From: foo@example.org, <bar@example.org>
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (senders
+        (correspondent
+          (email_address))
+        (correspondent
+          (email_address))))))
+
+===============================================================================
+Comma-separated correspondents across lines
+===============================================================================
+From: foo@example.org, 
+  <bar@example.org>
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (senders
+        (correspondent
+          (email_address))
+        (correspondent
+          (email_address))))))
+
+===============================================================================
+Comma-separated correspondents with a trailing comma
+===============================================================================
+From: foo@example.org, 
+  <bar@example.org>,
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (senders
+        (correspondent
+          (email_address))
+        (correspondent
+          (email_address))))))
+
+===============================================================================
+Name and email
+===============================================================================
+From: Foo Bar <foo@example.org>
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (senders
+        (correspondent
+          (name)
+          (email_address))))))
+
+===============================================================================
+Name and email, split in name
+===============================================================================
+From: Foo
+ Bar <foo@example.org>
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (senders
+        (correspondent
+          (name)
+          (email_address))))))
+
+===============================================================================
+Name and email, split after name
+===============================================================================
+From: Foo Bar
+ <foo@example.org>
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (senders
+        (correspondent
+          (name)
+          (email_address))))))
+
+===============================================================================
+Quoted name and email
+===============================================================================
+From: "Foo X. Bar" <foo@example.org>
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (senders
+        (correspondent
+          (quoted_name)
+          (email_address))))))
+
+===============================================================================
+Quoted name and email, split in name
+===============================================================================
+From: "Foo X.
+ Bar" <foo@example.org>
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (senders
+        (correspondent
+          (quoted_name)
+          (email_address))))))
