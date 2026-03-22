@@ -26,7 +26,8 @@ static inline bool at_newline_with_optional_linefeed(TSLexer *lexer) {
   return false;
 }
 
-bool tree_sitter_mail_external_scanner_scan(void *payload, TSLexer *lexer,
+bool tree_sitter_mail_external_scanner_scan(UNUSED void *payload,
+                                            TSLexer *lexer,
                                             const bool *valid_symbols) {
   if (!iswspace(lexer->lookahead)) {
     return false;
@@ -99,17 +100,17 @@ bool tree_sitter_mail_external_scanner_scan(void *payload, TSLexer *lexer,
 void *tree_sitter_mail_external_scanner_create() { return NULL; }
 
 // … and hence nothing destroyed, …
-void tree_sitter_mail_external_scanner_destroy(void *payload) { return; }
+void tree_sitter_mail_external_scanner_destroy(UNUSED void *payload) { return; }
 
 // … and nothing serialized, …
-unsigned tree_sitter_mail_external_scanner_serialize(void *payload,
-                                                     char *buffer) {
+unsigned tree_sitter_mail_external_scanner_serialize(UNUSED void *payload,
+                                                     UNUSED char *buffer) {
   return 0;
 }
 
 // … or loaded.
-void tree_sitter_mail_external_scanner_deserialize(void *payload,
-                                                   const char *buffer,
-                                                   unsigned length) {
+void tree_sitter_mail_external_scanner_deserialize(UNUSED void *payload,
+                                                   UNUSED const char *buffer,
+                                                   UNUSED unsigned length) {
   return;
 }
