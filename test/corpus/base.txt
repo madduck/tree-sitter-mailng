@@ -47,6 +47,37 @@ Other: other
       (contents))))
 
 ===============================================================================
+Message ID
+===============================================================================
+Message-Id: <78B93274-7E0E-43D2-B13D-CCD42E3CBD16@example.org>
+
+---
+
+(rfc5322_message
+  (headers
+    (header_msgid
+      (msgid))))
+
+===============================================================================
+References & In-Reply-To
+===============================================================================
+References: <78B93274-7E0E-43D2-B13D-CCD42E3CBD16@example.org>
+  <madduck/tree-sitter-mailng/check-suites/CS_kwDORoVgGc8AAAAOVSZYvw/1774210595@github.com>
+In-Reply-To: <78B93274-7E0E-43D2-B13D-CCD42E3CBD16@example.org>
+  <madduck/tree-sitter-mailng/check-suites/CS_kwDORoVgGc8AAAAOVSZYvw/1774210595@github.com>
+
+---
+
+(rfc5322_message
+  (headers
+    (header_references
+      (msgid)
+      (msgid))
+    (header_inreplyto
+      (msgid)
+      (msgid))))
+
+===============================================================================
 From header is case-insensitive
 ===============================================================================
 frOm: foo@example.org

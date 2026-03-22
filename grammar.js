@@ -50,6 +50,9 @@ export default grammar({
         $.header_from,
         $.header_email,
         $.header_subject,
+        $.header_msgid,
+        $.header_references,
+        $.header_inreplyto,
         $.header_other
       ), $._newline
     ),
@@ -186,6 +189,21 @@ export default grammar({
 
     header_other: $ => seq(/[-\w]+/, $._header_separator,
       alias($.multiline_contents, $.contents)
+    ),
+
+    msgid: $ => seq("<", alias($.email_address, 'msgid'), ">"),
+    header_msgid: $ => seq(token(prec(1, /[Mm][Ee][Ss][Ss][Aa][Gg][Ee]-[Ii][Dd]/)), $._header_separator,
+      $.msgid
+    ),
+
+    _one_or_more_msgids: $ => seq($.msgid, repeat(seq($._header_contents_whitespace, $.msgid))),
+
+    header_references: $ => seq(token(prec(1, /[Rr][Ee][Ff][Ee][Rr][Ee][Nn][Cc][Ee][Ss]/)), $._header_separator,
+      $._one_or_more_msgids
+    ),
+
+    header_inreplyto: $ => seq(token(prec(1, /[Ii][Nn]-[Rr][Ee][Pp][Ll][Yy]-[Tt][Oo]/)), $._header_separator,
+      $._one_or_more_msgids
     ),
 
     // The body is a collection of blocks and could be empty
