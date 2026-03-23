@@ -35,8 +35,7 @@ export default grammar({
         )
       ),
 
-    // _whitespace_except_newline: _$ => /[ \t]+/,
-    // _newline: _$ => /\r?\n/,
+    /** HEADERS ******************************************************** {{{ */
 
     // Headers is a collection of one or more _header instances
     headers: $ => repeat1($._header),
@@ -57,48 +56,36 @@ export default grammar({
       ), $._newline
     ),
 
-    // _header_contents_whitespace: _$ => /(?:[ \t]*\r?\n)?[ \t]+/,
-    _header_contents_whitespace: $ => choice($._whitespace_except_newline, $._logical_linebreak),
-
     // Each header consists of a label, followed by a colon, and optional whitespace:
     _header_separator: $ => seq(":", optional($._whitespace_except_newline)),
 
-    // The date header uses a standard RFC5322 format
-    _date_dow: _$ => /(Mon|Tue|Wed|Thu|Fri|Sat|Sun)/,
-    _date_day: _$ => /\d{1,2}/,
-    _date_month: _$ => /(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)/,
-    _date_year: _$ => /\d{4}/,
-    _date_time: _$ => /\d{2}:\d{2}:\d{2}/,
-    _date_tzoffset: _$ => /[-+]\d{4}/,
-    date: $ => seq(
-      $._date_dow, ",", $._header_contents_whitespace,
-      $._date_day, $._header_contents_whitespace,
-      $._date_month, $._header_contents_whitespace,
-      $._date_year, $._header_contents_whitespace,
-      $._date_time, $._header_contents_whitespace,
-      choice("GMT", $._date_tzoffset)
-    ),
-    header_date: $ => seq(token(prec(1, /[Dd][Aa][Tt][Ee]/)), $._header_separator, $.date),
+    _word: _$ => /\S+/,
+    _word_no_doublequotes: _$ => /[^"\s]+/,
+    _alnum_word: _$ => /\w+/,
 
-    /* Note: case-insensitive matching requires these regexps. Using
-    * token(prec(1, …)) gives liexical preference to those over other, more
-    * generic regexps, such as the one for all the other header labels further down.
-    * We don't *need* this here since the other header labels regexp is
-    * defined later (thus gets lower lexical precedence), but it's good
-    * practice to make this explicit.
-    */
+    // Header contents can flow to the next line if such starts with whitespace, which
+    // the standard calls "Folding"
+    _header_contents_whitespace: $ => choice($._whitespace_except_newline, $._logical_linebreak),
+    multiline_contents: $ => seq($._word, repeat(seq($._header_contents_whitespace, $._word))),
 
-    // Correspondents
+    /* Note: case-insensitive matching in the header field labels requires
+     * regexs that have capital and lower-case as options for each character.
+     * Thus, it is necessary to wrap these with token(prec(1, …)) to give
+     * lexical preference to those over other, more generic regexps, such as
+     * the one for all the other header labels further down.
+     *
+     * We don't *need* this here since the other header
+     * labels regexp is defined later (thus gets lower lexical precedence), but
+     * it's good practice to make this explicit.
+     */
+
+    /** CORRESPONDENTS ************************************************* {{{ */
 
     // Regex from https://stackoverflow.com/a/26989421
     email_address: _$ => /((([\t ]*\r\n)?[\t ]+)?[-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*(([\t ]*\r\n)?[\t ]+)?|(([\t ]*\r\n)?[\t ]+)?"(((([\t ]*\r\n)?[\t ]+)?([]!#-[^-~]|(\\[\t -~])))+(([\t ]*\r\n)?[\t ]+)?|(([\t ]*\r\n)?[\t ]+)?)"(([\t ]*\r\n)?[\t ]+)?)@((([\t ]*\r\n)?[\t ]+)?[-!#-'*+/-9=?A-Z^-~]+(\.[-!#-'*+/-9=?A-Z^-~]+)*(([\t ]*\r\n)?[\t ]+)?|(([\t ]*\r\n)?[\t ]+)?\[((([\t ]*\r\n)?[\t ]+)?[!-Z^-~])*(([\t ]*\r\n)?[\t ]+)?](([\t ]*\r\n)?[\t ]+)?)/,
     _br_email_address: $ => seq(
       "<", $.email_address, ">"
     ),
-
-    _word: _$ => /\S+/,
-    _word_no_doublequotes: _$ => /[^"\s]+/,
-    _alnum_word: _$ => /\w+/,
 
     name: $ =>
       // $.name is included in conflicts above such that TS can resolve the
@@ -167,29 +154,46 @@ export default grammar({
       )
     ),
 
+    /** }}} */
+
+    /** HEADER FIELDS WITH CORRESPONDENTS ****************************** {{{ */
+
     // The From and Reply-To headers, only special as we might want to syntax highlight it
     header_from: $ => seq(token(prec(1, /[Ff][Rr][Oo][Mm]/)), $._header_separator,
       alias($._one_or_more_correspondents, $.senders)
+    ),
+    // … and the other recipient headers
+    header_email: $ => seq(token(prec(1, /[Tt][Oo]|[Cc]{2}|[Bb][Cc]{2}/)), $._header_separator,
+      alias($._one_or_more_correspondents, $.recipients)
     ),
     header_replyto: $ => seq(token(prec(1, /[Rr][Ee][Pp][Ll][Yy]-[Tt][Oo]/)), $._header_separator,
       alias($._one_or_more_correspondents, $.replytos)
     ),
 
-    // … and the recipient headers
-    header_email: $ => seq(token(prec(1, /[Tt][Oo]|[Cc]{2}|[Bb][Cc]{2}/)), $._header_separator,
-      alias($._one_or_more_correspondents, $.recipients)
-    ),
+    /** }}} */
 
-    // Other header contents can flow to the next line if such starts with whitespace
-    multiline_contents: $ => seq($._word, repeat(seq($._header_contents_whitespace, $._word))),
+    /** DATE HEADER FIELD ********************************************** {{{ */
 
-    header_subject: $ => seq(token(prec(1, /[Ss][Uu][Bb][Jj][Ee][Cc][Tt]/)), $._header_separator,
-      alias($.multiline_contents, $.subject)
+    // The date header uses a standard RFC5322 format
+    _date_dow: _$ => /(Mon|Tue|Wed|Thu|Fri|Sat|Sun)/,
+    _date_day: _$ => /\d{1,2}/,
+    _date_month: _$ => /(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)/,
+    _date_year: _$ => /\d{4}/,
+    _date_time: _$ => /\d{2}:\d{2}:\d{2}/,
+    _date_tzoffset: _$ => /[-+]\d{4}/,
+    date: $ => seq(
+      $._date_dow, ",", $._header_contents_whitespace,
+      $._date_day, $._header_contents_whitespace,
+      $._date_month, $._header_contents_whitespace,
+      $._date_year, $._header_contents_whitespace,
+      $._date_time, $._header_contents_whitespace,
+      choice("GMT", $._date_tzoffset)
     ),
+    header_date: $ => seq(token(prec(1, /[Dd][Aa][Tt][Ee]/)), $._header_separator, $.date),
 
-    header_other: $ => seq(/[-\w]+/, $._header_separator,
-      alias($.multiline_contents, $.contents)
-    ),
+    /* }}} */
+
+    /** HEADER FIELDS WITH MSGIDS ************************************** {{{ */
 
     msgid: $ => seq("<", alias($.email_address, 'msgid'), ">"),
     header_msgid: $ => seq(token(prec(1, /[Mm][Ee][Ss][Ss][Aa][Gg][Ee]-[Ii][Dd]/)), $._header_separator,
@@ -206,8 +210,25 @@ export default grammar({
       $._one_or_more_msgids
     ),
 
-    // The body is a collection of blocks and could be empty
+    /* }}} */
+
+    /** SUBJECT AND OTHER HEADER FIELDS ******************************** {{{ */
+
+    header_subject: $ => seq(token(prec(1, /[Ss][Uu][Bb][Jj][Ee][Cc][Tt]/)), $._header_separator,
+      alias($.multiline_contents, $.subject)
+    ),
+
+    header_other: $ => seq(/[-\w]+/, $._header_separator,
+      alias($.multiline_contents, $.contents)
+    ),
+
+    /* }}} */
+
+    /** END HEADERS ***************************************************** }}}*/
+
     body: $ => repeat1($._block),
     _block: $ => seq(/.+/, $._newline),
   }
 });
+
+// vim:fdm=marker
