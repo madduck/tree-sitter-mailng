@@ -10,15 +10,6 @@
 export default grammar({
   name: "mail",
 
-  // extras doesn't default to nothing, so needs to be explicitly disabled
-  extras: _$ => [],
-  externals: $ => [
-    $._newline,
-    $._whitespace_except_newline,
-    $._logical_linebreak,
-  ],
-  conflicts: $ => [[$.name]],
-
   rules: {
     rfc5322_message: $ =>
       // An RFC5322 message is a set of headers, optionally followed by a body.
@@ -226,13 +217,13 @@ export default grammar({
 
     /** END HEADERS ***************************************************** }}}*/
 
-
     /** BODY *********************************************************** {{{ */
 
     _block: $ => seq(/.*/, $._newline),
+    body: $ => repeat1($._block),
+
     // The body is a collection of blocks and could be empty, with an optional
     // signature following the conventional delimiter "-- "
-
     signature_separator: $ => /-- \r?\n/,
 
     _body: $ => seq(
@@ -245,8 +236,17 @@ export default grammar({
       )
     ),
 
-    body: $ => repeat1($._block),
-  }
+    /* END BODY }}} */
+  },
+
+  // extras doesn't default to nothing, so needs to be explicitly disabled
+  extras: _$ => [],
+  externals: $ => [
+    $._newline,
+    $._whitespace_except_newline,
+    $._logical_linebreak,
+  ],
+  conflicts: $ => [[$.name]]
 });
 
-// vim:fdm=marker
+// vim:fdm=marker:fdl=0
