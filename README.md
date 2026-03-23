@@ -30,7 +30,6 @@ Planned features are:
 - Queries for syntax highlighting, folding, etc. (target NeoVim integration)
 - Markdown support for the mail body (maybe)
 - Quoted text, and nested quotations
-- Signatures
 
 ## Another parser??
 

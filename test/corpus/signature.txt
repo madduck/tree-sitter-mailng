@@ -1,0 +1,21 @@
+===============================================================================
+Signature
+===============================================================================
+Subject: sig
+
+body
+
+-- 
+sig
+multi-line
+
+---
+
+(rfc5322_message
+  (headers
+    (header_subject
+      (subject)))
+  (body_separator)
+  (body)
+  (signature_separator)
+  (signature))

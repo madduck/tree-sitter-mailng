@@ -30,7 +30,7 @@ export default grammar({
             // The body separator is just an empty line. Depending on the
             // file format, this could include a line-feed or not
             alias($._newline, $.body_separator),
-            optional($.body)
+            optional($._body)
           )
         )
       ),
@@ -226,8 +226,26 @@ export default grammar({
 
     /** END HEADERS ***************************************************** }}}*/
 
+
+    /** BODY *********************************************************** {{{ */
+
+    _block: $ => seq(/.*/, $._newline),
+    // The body is a collection of blocks and could be empty, with an optional
+    // signature following the conventional delimiter "-- "
+
+    signature_separator: $ => /-- \r?\n/,
+
+    _body: $ => seq(
+      $.body,
+      optional(
+        seq(
+          $.signature_separator,
+          alias($.body, $.signature)
+        )
+      )
+    ),
+
     body: $ => repeat1($._block),
-    _block: $ => seq(/.+/, $._newline),
   }
 });
 
