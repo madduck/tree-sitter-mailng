@@ -49,7 +49,7 @@ Other: other
       (senders
         (correspondent
           (email_address))))
-    (header_email
+    (header_rcpt
       (recipients
         (correspondent
           (email_address))
@@ -71,7 +71,7 @@ Bcc:
 
 (rfc5322_message
   (headers
-    (header_email)))
+    (header_rcpt
 
 ===============================================================================
 Empty address header field with trailing spaces
@@ -138,7 +138,7 @@ TO: foo@example.org
 
 (rfc5322_message
   (headers
-    (header_email
+    (header_rcpt
       (recipients
         (correspondent
           (email_address))))))

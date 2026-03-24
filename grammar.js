@@ -28,24 +28,23 @@ export default grammar({
 
     /** HEADERS ******************************************************** {{{ */
 
-    // Headers is a collection of one or more _header instances
-    headers: $ => repeat1($._header),
+    // Headers is a collection of one or more _header instances, each followed
+    // by an actual newline
+    headers: $ => repeat1(seq($.header, $._newline)),
 
-    // Each header occupies a (logical) line by itself, hence the final newline.
+    // Each header occupies a (logical) line by itself.
     // We differentiate between the different headers here mostly for enabling
     // queries later e.g. for syntax highlighting:
-    _header: $ => seq(
-      choice(
-        $.header_date,
-        $.header_from,
-        $.header_replyto,
-        $.header_email,
-        $.header_subject,
-        $.header_msgid,
-        $.header_references,
-        $.header_inreplyto,
-        $.header_other
-      ), $._newline
+    header: $ => choice(
+      $.header_date,
+      $.header_from,
+      $.header_replyto,
+      $.header_rcpt,
+      $.header_subject,
+      $.header_msgid,
+      $.header_references,
+      $.header_inreplyto,
+      $.header_other
     ),
 
     // Each header consists of a label, followed by a colon, and optional whitespace:
@@ -155,7 +154,7 @@ export default grammar({
       optional(alias($._one_or_more_correspondents, $.senders))
     ),
     // … and the other recipient headers
-    header_email: $ => seq(token(prec(1, /[Tt][Oo]|[Cc]{2}|[Bb][Cc]{2}/)), $._header_separator,
+    header_rcpt: $ => seq(token(prec(1, /[Tt][Oo]|[Cc]{2}|[Bb][Cc]{2}/)), $._header_separator,
       optional(alias($._one_or_more_correspondents, $.recipients))
     ),
     header_replyto: $ => seq(token(prec(1, /[Rr][Ee][Pp][Ll][Yy]-[Tt][Oo]/)), $._header_separator,
@@ -242,6 +241,7 @@ export default grammar({
 
   // extras doesn't default to nothing, so needs to be explicitly disabled
   extras: _$ => [],
+  supertypes: $ => [$.header],
   externals: $ => [
     $._newline,
     $._whitespace_except_newline,
