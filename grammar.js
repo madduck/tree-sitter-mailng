@@ -152,14 +152,14 @@ export default grammar({
 
     // The From and Reply-To headers, only special as we might want to syntax highlight it
     header_from: $ => seq(token(prec(1, /[Ff][Rr][Oo][Mm]/)), $._header_separator,
-      alias($._one_or_more_correspondents, $.senders)
+      optional(alias($._one_or_more_correspondents, $.senders))
     ),
     // … and the other recipient headers
     header_email: $ => seq(token(prec(1, /[Tt][Oo]|[Cc]{2}|[Bb][Cc]{2}/)), $._header_separator,
-      alias($._one_or_more_correspondents, $.recipients)
+      optional(alias($._one_or_more_correspondents, $.recipients))
     ),
     header_replyto: $ => seq(token(prec(1, /[Rr][Ee][Pp][Ll][Yy]-[Tt][Oo]/)), $._header_separator,
-      alias($._one_or_more_correspondents, $.replytos)
+      optional(alias($._one_or_more_correspondents, $.replytos))
     ),
 
     /** }}} */
