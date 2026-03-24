@@ -224,7 +224,7 @@ export default grammar({
 
     // The body is a collection of blocks and could be empty, with an optional
     // signature following the conventional delimiter "-- "
-    signature_separator: $ => /-- \r?\n/,
+    signature_separator: _$ => /-- \r?\n/,
 
     _body: $ => seq(
       $.body,
