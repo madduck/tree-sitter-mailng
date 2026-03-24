@@ -49,7 +49,7 @@ export default grammar({
     ),
 
     // Each header consists of a label, followed by a colon, and optional whitespace:
-    _header_separator: $ => seq(":", optional($._whitespace_except_newline)),
+    _header_separator: $ => seq(":", repeat($._whitespace_except_newline)),
 
     _word: _$ => /\S+/,
     _word_no_doublequotes: _$ => /[^"\s]+/,
