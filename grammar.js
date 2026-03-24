@@ -127,6 +127,9 @@ export default grammar({
         // … before the email address in angle brackets:
         $._br_email_address
       ),
+      // A correspondent *can* also just be a name, e.g. an alias for mutt,
+      // or a local user:
+      $.name,
     ),
 
     _comma_separator: $ => prec.right(
@@ -247,7 +250,7 @@ export default grammar({
     $._whitespace_except_newline,
     $._logical_linebreak,
   ],
-  conflicts: $ => [[$.name]]
+  conflicts: $ => [[$.name], [$.correspondent]]
 });
 
 // vim:fdm=marker:fdl=0

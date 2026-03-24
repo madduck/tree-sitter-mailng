@@ -167,3 +167,18 @@ From: "Foo X.
         (correspondent
           (quoted_name)
           (email_address))))))
+
+===============================================================================
+Email header with alias or local email address
+===============================================================================
+To: bestfriend
+
+---
+
+(rfc5322_message
+  (headers
+    (header_rcpt
+      (label_rcpt)
+      (recipients
+        (correspondent
+          (name))))))
