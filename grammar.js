@@ -38,6 +38,7 @@ export default grammar({
       choice(
         $.header_date,
         $.header_from,
+        $.header_replyto,
         $.header_email,
         $.header_subject,
         $.header_msgid,
