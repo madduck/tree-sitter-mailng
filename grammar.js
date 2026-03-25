@@ -245,11 +245,19 @@ export default grammar({
 
     // The body is a collection of blocks and could be empty, with an optional
     // signature following the conventional delimiter "-- "
-    signature_separator: _$ => /-- \r?\n/,
+    signature_separator: _$ => token(prec(2, /-- \r?\n/)),
 
-    _body: $ => seq(
-      $.body,
-      optional(
+    _body: $ => choice(
+      seq(
+        $.body,
+        optional(
+          seq(
+            $.signature_separator,
+            alias($.body, $.signature)
+          )
+        )
+      ),
+      seq(
         seq(
           $.signature_separator,
           alias($.body, $.signature)

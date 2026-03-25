@@ -19,3 +19,87 @@ multi-line
   (body)
   (signature_separator)
   (signature))
+
+===============================================================================
+Signature without body
+===============================================================================
+Subject: sig
+
+-- 
+sig
+
+---
+
+(rfc5322_message
+  (headers
+    (header_subject
+      (subject)))
+  (body_separator)
+  (signature_separator)
+  (signature))
+
+===============================================================================
+Signature following empty body (just newline)
+===============================================================================
+Subject: sig
+
+
+-- 
+sig
+
+---
+
+(rfc5322_message
+  (headers
+    (header_subject
+      (subject)))
+  (body_separator)
+  (body)
+  (signature_separator)
+  (signature))
+
+===============================================================================
+Signature with empty line
+===============================================================================
+Subject: sig
+
+body
+
+-- 
+sig
+
+after empty line
+
+---
+
+(rfc5322_message
+  (headers
+    (header_subject
+      (subject)))
+  (body_separator)
+  (body)
+  (signature_separator)
+  (signature))
+
+===============================================================================
+Signature with whitespace line
+===============================================================================
+Subject: sig
+
+body
+
+-- 
+sig
+ 
+there is whitespace in the previous line
+
+---
+
+(rfc5322_message
+  (headers
+    (header_subject
+      (subject)))
+  (body_separator)
+  (body)
+  (signature_separator)
+  (signature))
