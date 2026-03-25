@@ -58,5 +58,5 @@ tree-sitter test
 
 ## Legalese
 
-The code is © 2026 martin f. krafft <tree-sitter-mailng@pobox.madduck.net>
+The code is © 2026 martin f. krafft <tree-sitter-mailng@pobox.madduck.net>  
 It is released under the terms of the MIT licence.
