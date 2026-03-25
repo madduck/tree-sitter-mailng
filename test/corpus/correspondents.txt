@@ -182,3 +182,36 @@ To: bestfriend
       (recipients
         (correspondent
           (name))))))
+
+===============================================================================
+Email header with named empty group
+===============================================================================
+To: friends:;
+
+---
+
+(rfc5322_message
+  (headers
+    (header_rcpt
+      (label_rcpt)
+      (recipients
+        (group)))))
+
+===============================================================================
+Email header with named group
+===============================================================================
+To: friends: foo@example.org, John <john@example.net>;
+
+---
+
+(rfc5322_message
+  (headers
+    (header_rcpt
+      (label_rcpt)
+      (recipients
+        (group
+         (correspondent
+          (email_address))
+         (correspondent
+          (name)
+          (email_address)))))))

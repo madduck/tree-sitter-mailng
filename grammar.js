@@ -147,21 +147,39 @@ export default grammar({
         ))
       )
     ),
+    group: $ => seq(
+      $._alnum_word,
+      ":",
+      optional($._header_contents_whitespace),
+      optional($._one_or_more_correspondents),
+      optional($._header_contents_whitespace),
+      ";"
+    ),
+    _correspondents: $ => choice(
+      $.group,
+      $._one_or_more_correspondents
+    ),
 
     /** }}} */
 
     /** HEADER FIELDS WITH CORRESPONDENTS ****************************** {{{ */
 
     // The From and Reply-To headers, only special as we might want to syntax highlight it
-    header_from: $ => seq(token(prec(1, /[Ff][Rr][Oo][Mm]/)), $._header_separator,
-      optional(alias($._one_or_more_correspondents, $.senders))
+    header_from: $ => seq(
+      alias(token(prec(1, /[Ff][Rr][Oo][Mm]/)), $.label_from),
+      $._header_separator,
+      optional(alias($._correspondents, $.senders))
     ),
     // … and the other recipient headers
-    header_rcpt: $ => seq(token(prec(1, /[Tt][Oo]|[Cc]{2}|[Bb][Cc]{2}/)), $._header_separator,
-      optional(alias($._one_or_more_correspondents, $.recipients))
+    header_rcpt: $ => seq(
+      alias(token(prec(1, /[Tt][Oo]|[Cc]{2}|[Bb][Cc]{2}/)), $.label_rcpt),
+      $._header_separator,
+      optional(alias($._correspondents, $.recipients))
     ),
-    header_replyto: $ => seq(token(prec(1, /[Rr][Ee][Pp][Ll][Yy]-[Tt][Oo]/)), $._header_separator,
-      optional(alias($._one_or_more_correspondents, $.replytos))
+    header_replyto: $ => seq(
+      alias(token(prec(1, /[Rr][Ee][Pp][Ll][Yy]-[Tt][Oo]/)), $.label_replyto),
+      $._header_separator,
+      optional(alias($._correspondents, $.replytos))
     ),
 
     /** }}} */
