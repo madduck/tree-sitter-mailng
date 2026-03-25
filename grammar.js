@@ -48,7 +48,7 @@ export default grammar({
     ),
 
     // Each header consists of a label, followed by a colon, and optional whitespace:
-    _header_separator: $ => seq(":", repeat($._whitespace_except_newline)),
+    _header_separator: $ => seq(":", repeat($._hspace)),
 
     _word: _$ => /\S+/,
     _word_no_doublequotes: _$ => /[^"\s]+/,
@@ -56,7 +56,10 @@ export default grammar({
 
     // Header contents can flow to the next line if such starts with whitespace, which
     // the standard calls "Folding"
-    _header_contents_whitespace: $ => choice($._whitespace_except_newline, $._logical_linebreak),
+    _header_contents_whitespace: $ => prec.right(choice(
+      $._hspace,
+      seq(optional($._hspace), $._logical_linebreak)
+    )),
     multiline_contents: $ => seq($._word, repeat(seq($._header_contents_whitespace, $._word))),
 
     /* Note: case-insensitive matching in the header field labels requires
@@ -273,7 +276,7 @@ export default grammar({
   supertypes: $ => [$.header],
   externals: $ => [
     $._newline,
-    $._whitespace_except_newline,
+    $._hspace,
     $._logical_linebreak,
   ],
   conflicts: $ => [[$.name], [$.correspondent]]

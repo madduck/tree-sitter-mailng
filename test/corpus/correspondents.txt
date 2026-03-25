@@ -59,6 +59,23 @@ From: foo@example.org, <bar@example.org>
 ===============================================================================
 Comma-separated correspondents across lines
 ===============================================================================
+From: foo@example.org,
+  <bar@example.org>
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (senders
+        (correspondent
+          (email_address))
+        (correspondent
+          (email_address))))))
+
+===============================================================================
+Comma-separated correspondents across lines with whitespace after comma
+===============================================================================
 From: foo@example.org, 
   <bar@example.org>
 
@@ -76,7 +93,7 @@ From: foo@example.org,
 ===============================================================================
 Comma-separated correspondents with a trailing comma
 ===============================================================================
-From: foo@example.org, 
+From: foo@example.org,
   <bar@example.org>,
 
 ---

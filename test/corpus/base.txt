@@ -33,6 +33,40 @@ body
   (body))
 
 ===============================================================================
+Subject & body with carriage returns
+===============================================================================
+Subject: subject
+
+body
+
+---
+
+(rfc5322_message
+  (headers
+    (header_subject
+      (subject)))
+  (body_separator)
+  (body))
+
+===============================================================================
+Body with whitespace line
+===============================================================================
+Subject: subject
+
+body
+ 
+whitespace above
+
+---
+
+(rfc5322_message
+  (headers
+    (header_subject
+      (subject)))
+  (body_separator)
+  (body))
+
+===============================================================================
 Header fields
 ===============================================================================
 From: foo@example.org

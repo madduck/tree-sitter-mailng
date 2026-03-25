@@ -3,94 +3,109 @@
 #include <stdio.h>
 #include <wctype.h>
 
-#define DEBUGPRINT(...) // printf(__VA_ARGS__)
+enum TokenType { NEWLINE, HSPACE, LOGICAL_LINEBREAK };
 
-enum TokenType { NEWLINE, WHITESPACE, LOGICAL_LINE_WHITESPACE };
+// #define DEBUG 1
 
-static inline void advance(TSLexer *lexer) { lexer->advance(lexer, false); }
-static inline void mark_end(TSLexer *lexer) { lexer->mark_end(lexer); }
+#ifdef DEBUG
+#define DEBUGPRINT(...) printf(__VA_ARGS__)
+#else
+#define DEBUGPRINT(...)
+#endif
 
-static inline bool iswspace_but_not_newline(wint_t wc) {
-  return iswspace(wc) && wc != '\n';
+#ifdef DEBUG
+#define advance(lexer)                                                         \
+  {                                                                            \
+    wint_t before = lexer->lookahead;                                          \
+    lexer->advance(lexer, false);                                              \
+    DEBUGPRINT("advance to col %d, 0x%02x → 0x%02x (line %d)\n",               \
+               lexer->get_column(lexer), before, lexer->lookahead, __LINE__);  \
+  }
+#define mark_end(lexer)                                                        \
+  {                                                                            \
+    lexer->mark_end(lexer);                                                    \
+    DEBUGPRINT("mark end at col %d: '%c' (0x%02x) (line %d)\n",                \
+               lexer->get_column(lexer), lexer->lookahead, lexer->lookahead,   \
+               __LINE__);                                                      \
+  }
+
+static inline void debugprint_scanner_state(TSLexer *lexer,
+                                            const bool *valid_symbols) {
+  DEBUGPRINT("Scanner called, lookahead: 0x%02x… valid_symbols=",
+             lexer->lookahead);
+  for (int i = NEWLINE; i <= LOGICAL_LINEBREAK; ++i) {
+    DEBUGPRINT("%d", valid_symbols[i]);
+  }
+  DEBUGPRINT("\n");
 }
 
-static inline bool at_newline_with_optional_linefeed(TSLexer *lexer) {
-  if (lexer->lookahead == '\r') {
-    mark_end(lexer);
+#else
+#define advance(lexer) lexer->advance(lexer, false)
+#define mark_end(lexer) lexer->mark_end(lexer)
+#define debugprint_scanner_state(...)
+#endif
+
+#define ishspace(wc) wc != '\n' && wc != '\r' && iswspace(wc)
+
+static inline unsigned int slurp_up_horizontal_space(TSLexer *lexer) {
+  unsigned int wscnt = 0;
+  while (ishspace(lexer->lookahead)) {
+    // slurp up all whitespace, which includes carriage return (\r)
     advance(lexer);
+    ++wscnt;
   }
-  if (lexer->lookahead == '\n') {
-    mark_end(lexer);
-    return true;
+  if (wscnt > 0) {
+    DEBUGPRINT("Slurped %d whitespaces\n", wscnt);
   }
-  return false;
+  return wscnt;
 }
 
 bool tree_sitter_mail_external_scanner_scan(UNUSED void *payload,
                                             TSLexer *lexer,
                                             const bool *valid_symbols) {
+  debugprint_scanner_state(lexer, valid_symbols);
+
+  // we only concern ourselves when there is whitespace ahead, so
+  // shortcut:
   if (!iswspace(lexer->lookahead)) {
     return false;
   }
 
-  DEBUGPRINT("Lookahead now '%c' (%02x)…\n", lexer->lookahead,
-             lexer->lookahead);
-  DEBUGPRINT("Valid symbols: %c%c%c\n", valid_symbols[NEWLINE] ? '+' : '-',
-             valid_symbols[WHITESPACE] ? '+' : '-',
-             valid_symbols[LOGICAL_LINE_WHITESPACE] ? '+' : '-');
-
-  unsigned int wscnt = 0;
-  if (valid_symbols[WHITESPACE] || valid_symbols[LOGICAL_LINE_WHITESPACE]) {
-    while (iswspace_but_not_newline(lexer->lookahead)) {
-      // slurp up all trailing whitespace, which includes linefeeds (\r)
-      advance(lexer);
-      ++wscnt;
-    }
+  if (valid_symbols[HSPACE] && slurp_up_horizontal_space(lexer) > 0) {
+    DEBUGPRINT("Found horizontal space before '%c' (0x%02x)\n",
+               lexer->lookahead, lexer->lookahead);
+    lexer->result_symbol = HSPACE;
+    return true;
   }
 
-  if (valid_symbols[NEWLINE] || valid_symbols[WHITESPACE] ||
-      valid_symbols[LOGICAL_LINE_WHITESPACE]) {
+  if (valid_symbols[NEWLINE] || valid_symbols[LOGICAL_LINEBREAK]) {
+    mark_end(lexer);
+    if (lexer->lookahead == '\r') {
+      advance(lexer);
+    }
+    if (lexer->lookahead != '\n') {
+      return false;
+    }
+    advance(lexer);
+    DEBUGPRINT("Found newline, now looking at '%c' (0x%02x)\n",
+               lexer->lookahead, lexer->lookahead);
 
-    if (valid_symbols[WHITESPACE] && !iswspace(lexer->lookahead)) {
-      DEBUGPRINT(
-          "Found just whitespace (len=%d) before '%c' (%02x, column %d)\n",
-          wscnt, lexer->lookahead, lexer->lookahead, lexer->get_column(lexer));
-      lexer->result_symbol = WHITESPACE;
+    if (slurp_up_horizontal_space(lexer) > 0 &&
+        valid_symbols[LOGICAL_LINEBREAK]) {
+      DEBUGPRINT("Found logical-line whitespace\n");
+      mark_end(lexer);
+      lexer->result_symbol = LOGICAL_LINEBREAK;
       return true;
     }
 
-    // assert(lexer->lookahead == '\n');
-
-    if (valid_symbols[NEWLINE] || valid_symbols[LOGICAL_LINE_WHITESPACE]) {
-
-      advance(lexer);
-
-      DEBUGPRINT("Post-newline: %02x, '%c', column %d\n", lexer->lookahead,
-                 lexer->lookahead, lexer->get_column(lexer));
-
-      if (valid_symbols[NEWLINE] || valid_symbols[LOGICAL_LINE_WHITESPACE]) {
-        if (!iswspace_but_not_newline(lexer->lookahead)) {
-
-          DEBUGPRINT("Found single newline\n");
-          mark_end(lexer);
-          lexer->result_symbol = NEWLINE;
-          return true;
-        }
-
-        do {
-          DEBUGPRINT("Slurping '%c'…\n", lexer->lookahead);
-          advance(lexer);
-        } while (iswspace_but_not_newline(lexer->lookahead));
-
-        DEBUGPRINT("Lookahead now '%c' (%02x)…\n", lexer->lookahead,
-                   lexer->lookahead);
-        DEBUGPRINT("Found logical-line whitespace\n");
-        mark_end(lexer);
-        lexer->result_symbol = LOGICAL_LINE_WHITESPACE;
-        return true;
-      }
+    if (valid_symbols[NEWLINE]) {
+      DEBUGPRINT("Found just newline\n");
+      mark_end(lexer);
+      lexer->result_symbol = NEWLINE;
+      return true;
     }
   }
+
   return false;
 }
 
