@@ -204,24 +204,34 @@ export default grammar({
       $._date_time, $._header_contents_whitespace,
       choice("GMT", $._date_tzoffset)
     ),
-    header_date: $ => seq(token(prec(1, /[Dd][Aa][Tt][Ee]/)), $._header_separator, $.date),
+    header_date: $ => seq(
+      alias(token(prec(1, /[Dd][Aa][Tt][Ee]/)), $.label_date),
+      $._header_separator,
+      $.date
+    ),
 
     /* }}} */
 
     /** HEADER FIELDS WITH MSGIDS ************************************** {{{ */
 
     msgid: $ => seq("<", alias($.email_address, 'msgid'), ">"),
-    header_msgid: $ => seq(token(prec(1, /[Mm][Ee][Ss][Ss][Aa][Gg][Ee]-[Ii][Dd]/)), $._header_separator,
+    header_msgid: $ => seq(
+      alias(token(prec(1, /[Mm][Ee][Ss][Ss][Aa][Gg][Ee]-[Ii][Dd]/)), $.label_msgid),
+      $._header_separator,
       $.msgid
     ),
 
     _one_or_more_msgids: $ => seq($.msgid, repeat(seq($._header_contents_whitespace, $.msgid))),
 
-    header_references: $ => seq(token(prec(1, /[Rr][Ee][Ff][Ee][Rr][Ee][Nn][Cc][Ee][Ss]/)), $._header_separator,
+    header_references: $ => seq(
+      alias(token(prec(1, /[Rr][Ee][Ff][Ee][Rr][Ee][Nn][Cc][Ee][Ss]/)), $.label_references),
+      $._header_separator,
       $._one_or_more_msgids
     ),
 
-    header_inreplyto: $ => seq(token(prec(1, /[Ii][Nn]-[Rr][Ee][Pp][Ll][Yy]-[Tt][Oo]/)), $._header_separator,
+    header_inreplyto: $ => seq(
+      alias(token(prec(1, /[Ii][Nn]-[Rr][Ee][Pp][Ll][Yy]-[Tt][Oo]/)), $.label_inreplyto),
+      $._header_separator,
       $._one_or_more_msgids
     ),
 
@@ -229,11 +239,15 @@ export default grammar({
 
     /** SUBJECT AND OTHER HEADER FIELDS ******************************** {{{ */
 
-    header_subject: $ => seq(token(prec(1, /[Ss][Uu][Bb][Jj][Ee][Cc][Tt]/)), $._header_separator,
+    header_subject: $ => seq(
+      alias(token(prec(1, /[Ss][Uu][Bb][Jj][Ee][Cc][Tt]/)), $.label_subject),
+      $._header_separator,
       alias($.multiline_contents, $.subject)
     ),
 
-    header_other: $ => seq(/[-\w]+/, $._header_separator,
+    header_other: $ => seq(
+      alias(/[-\w]+/, $.label_other),
+      $._header_separator,
       alias($.multiline_contents, $.contents)
     ),
 

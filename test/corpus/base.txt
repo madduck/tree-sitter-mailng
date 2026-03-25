@@ -10,6 +10,7 @@ body
 (rfc5322_message
   (headers
     (header_from
+      (label_from)
       (senders
         (correspondent
           (email_address)))))
@@ -28,6 +29,7 @@ body
 (rfc5322_message
   (headers
     (header_subject
+      (label_subject)
       (subject)))
   (body_separator)
   (body))
@@ -44,6 +46,7 @@ body
 (rfc5322_message
   (headers
     (header_subject
+      (label_subject)
       (subject)))
   (body_separator)
   (body))
@@ -62,6 +65,7 @@ whitespace above
 (rfc5322_message
   (headers
     (header_subject
+      (label_subject)
       (subject)))
   (body_separator)
   (body))
@@ -80,20 +84,25 @@ Other: other
 (rfc5322_message
   (headers
     (header_from
+      (label_from)
       (senders
         (correspondent
           (email_address))))
     (header_rcpt
+      (label_rcpt)
       (recipients
         (correspondent
           (email_address))
         (correspondent
           (email_address))))
     (header_subject
+      (label_subject)
       (subject))
     (header_date
+      (label_date)
       (date))
     (header_other
+      (label_other)
       (contents))))
 
 ===============================================================================
@@ -106,6 +115,7 @@ Bcc:
 (rfc5322_message
   (headers
     (header_rcpt
+      (label_rcpt))))
 
 ===============================================================================
 Empty address header field with trailing spaces
@@ -116,7 +126,8 @@ Reply-To:
 
 (rfc5322_message
   (headers
-    (header_replyto)))
+    (header_replyto
+      (label_replyto))))
 
 ===============================================================================
 Message ID
@@ -128,6 +139,7 @@ Message-Id: <78B93274-7E0E-43D2-B13D-CCD42E3CBD16@example.org>
 (rfc5322_message
   (headers
     (header_msgid
+      (label_msgid)
       (msgid))))
 
 ===============================================================================
@@ -143,9 +155,11 @@ In-Reply-To: <78B93274-7E0E-43D2-B13D-CCD42E3CBD16@example.org>
 (rfc5322_message
   (headers
     (header_references
+      (label_references)
       (msgid)
       (msgid))
     (header_inreplyto
+      (label_inreplyto)
       (msgid)
       (msgid))))
 
@@ -159,6 +173,7 @@ frOm: foo@example.org
 (rfc5322_message
   (headers
     (header_from
+      (label_from)
       (senders
         (correspondent
           (email_address))))))
@@ -173,6 +188,7 @@ TO: foo@example.org
 (rfc5322_message
   (headers
     (header_rcpt
+      (label_rcpt)
       (recipients
         (correspondent
           (email_address))))))
@@ -187,6 +203,7 @@ SuBjEcT: subject
 (rfc5322_message
   (headers
     (header_subject
+      (label_subject)
       (subject))))
 
 ===============================================================================
@@ -199,6 +216,7 @@ datE: Tue, 17 Mar 2026 15:27:34 +0100
 (rfc5322_message
   (headers
     (header_date
+      (label_date)
       (date))))
 
 ===============================================================================
@@ -211,6 +229,7 @@ Date: Tue, 17 Mar 2026 15:27:34 GMT
 (rfc5322_message
   (headers
     (header_date
+      (label_date)
       (date))))
 
 ===============================================================================
@@ -224,6 +243,7 @@ Date: Tue, 17 Mar 2026
 (rfc5322_message
   (headers
     (header_date
+      (label_date)
       (date))))
 
 ===============================================================================
@@ -239,6 +259,8 @@ X-Bar: bar
 (rfc5322_message
   (headers
     (header_subject
+      (label_subject)
       (subject))
     (header_other
+      (label_other)
       (contents))))
