@@ -10,7 +10,7 @@
         "mail"
       ],
       "injection-regex": "^mailng$",
-      "class-name": "TreeSitterMailng"
+      "class-name": "TreeSitterMailNG",
     }
   ],
   "metadata": {
