@@ -78,6 +78,43 @@ Planned features are:
 - Queries for folding, text-objects etc. (target NeoVim integration)
 - Quoted text, and nested quotations
 
+## How to use with NeoVim?
+
+Assuming that you have a working NeoVim with
+[nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter), the
+[recommended
+way](https://github.com/nvim-treesitter/nvim-treesitter#adding-custom-languages)
+to include this parser and associate it with the `mail` file type is to place
+the following into your `after/ftplugin/mail.lua`. This will hook into the
+`:TSUpdate` command, but only within a mail file. If you want `TSUpdate` to
+update the parser at any time it's called, then place the hook into a
+non-ftplugin file:
+
+```Lua
+vim.api.nvim_create_autocmd('User', { pattern = 'TSUpdate',
+callback = function()
+  require('nvim-treesitter.parsers').mail = {
+    tier = 2, -- Support level: unstable
+    install_info = {
+      url = 'https://github.com/madduck/tree-sitter-mailng',
+      revision = "main",
+      generate = true,
+      generate_from_json = false,
+      queries = 'queries/mail',
+    },
+  }
+end})
+```
+
+Once added, start NeoVim on a mail file and run:
+
+```Vim
+:TSUpdate
+:TSInstall mail
+```
+
+and reload the file.
+
 ## Another parser??
 
 As you may have gleaned from the example message, this project was inspired by
