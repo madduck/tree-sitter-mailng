@@ -244,3 +244,19 @@ To: friends: foo@example.org, John <john@example.net>;
          (correspondent
           (name)
           (email_address)))))))
+
+===============================================================================
+Unquoted correspondent name with dash
+===============================================================================
+To: Company - Someone <someone@example.org>
+
+---
+
+(rfc5322_message
+  (headers
+    (header_rcpt
+      (label_rcpt)
+      (recipients
+       (correspondent
+        (name)
+        (email_address))))))
