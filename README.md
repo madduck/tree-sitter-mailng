@@ -66,10 +66,16 @@ The parser can handle:
 - Basic body text
 - Signatures
 
+and it includes a basic set of queries mainly targeting
+[NeoVim](https://neovim.io/) (via
+[nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter)):
+
+- Syntax highlighting
+- Injection of Markdown into the mail body
+
 Planned features are:
 
-- Queries for syntax highlighting, folding, etc. (target NeoVim integration)
-- Markdown support for the mail body (maybe)
+- Queries for folding, text-objects etc. (target NeoVim integration)
 - Quoted text, and nested quotations
 
 ## Another parser??

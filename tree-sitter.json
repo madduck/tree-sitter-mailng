@@ -9,8 +9,10 @@
       "file-types": [
         "mail"
       ],
-      "injection-regex": "^mailng$",
+      "injection-regex": "^mail$",
       "class-name": "TreeSitterMailNG",
+      "highlights": "queries/mail/highlights.scm",
+      "injections": "queries/mail/injections.scm"
     }
   ],
   "metadata": {

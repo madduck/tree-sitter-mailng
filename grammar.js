@@ -81,7 +81,7 @@ export default grammar({
       "<", $.email_address, ">"
     ),
 
-    _csp_name: _$ => /[-\w]+/,
+    _csp_name: _$ => /\w+/,
     name: $ =>
       // $.name is included in conflicts above such that TS can resolve the
       // ambiguity that arises when $.name is followed by $.whitespace.
