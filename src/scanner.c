@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <wctype.h>
 
-enum TokenType { NEWLINE, HSPACE, LOGICAL_LINEBREAK };
+enum TokenType { NEWLINE, HSPACE, LOGICAL_LINEBREAK, ERROR_SENTINEL };
 
 // #define DEBUG 1
 
@@ -64,6 +64,10 @@ bool tree_sitter_mail_external_scanner_scan(UNUSED void *payload,
                                             TSLexer *lexer,
                                             const bool *valid_symbols) {
   debugprint_scanner_state(lexer, valid_symbols);
+
+  if (valid_symbols[ERROR_SENTINEL]) {
+    return false;
+  }
 
   // we only concern ourselves when there is whitespace ahead, so
   // shortcut:

@@ -296,6 +296,7 @@ export default grammar({
     $._newline,
     $._hspace,
     $._logical_linebreak,
+    $._error_sentinel
   ],
   conflicts: $ => [[$.name], [$.correspondent]]
 });
