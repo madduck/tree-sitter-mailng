@@ -52,7 +52,7 @@ export default grammar({
 
     _word: _$ => /\S+/,
     _word_no_doublequotes: _$ => /[^"\s]+/,
-    _alnum_word: _$ => /\w+/,
+    _atext: _$ => /[-!#$&'+/=?^_`{|}~\w]+/,
 
     // Header contents can flow to the next line if such starts with whitespace, which
     // the standard calls "Folding"
@@ -81,17 +81,15 @@ export default grammar({
       "<", $.email_address, ">"
     ),
 
-    // _csp_name: _$ => /[-!#$&'+/=?^_`{|}~\w]+/,
-    _csp_name: _$ => /\w+/,
     name: $ =>
       // $.name is included in conflicts below such that TS can resolve the
       // ambiguity that arises when $.name is followed by $.whitespace.
       seq(
-        $._csp_name,
+        $._atext,
         repeat(
           seq(
             $._header_contents_whitespace,
-            $._csp_name
+            $._atext
           )
         )
       ),
@@ -153,7 +151,7 @@ export default grammar({
       )
     ),
     group: $ => seq(
-      $._alnum_word,
+      $._atext,
       ":",
       optional($._header_contents_whitespace),
       optional($._one_or_more_correspondents),
