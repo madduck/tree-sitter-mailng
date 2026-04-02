@@ -84,7 +84,7 @@ export default grammar({
     // _csp_name: _$ => /[-!#$&'+/=?^_`{|}~\w]+/,
     _csp_name: _$ => /\w+/,
     name: $ =>
-      // $.name is included in conflicts above such that TS can resolve the
+      // $.name is included in conflicts below such that TS can resolve the
       // ambiguity that arises when $.name is followed by $.whitespace.
       seq(
         $._csp_name,
