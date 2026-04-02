@@ -246,8 +246,10 @@ export default grammar({
       alias($.multiline_contents, $.subject)
     ),
 
+    label_other: _$ => /[-\w]+/,
+
     header_other: $ => seq(
-      alias(/[-\w]+/, $.label_other),
+      $.label_other,
       $._header_separator,
       alias($.multiline_contents, $.contents)
     ),
