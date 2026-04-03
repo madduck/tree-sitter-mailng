@@ -260,3 +260,36 @@ To: Company - Someone <someone@example.org>
        (correspondent
         (name)
         (email_address))))))
+
+===============================================================================
+Quoted name with Umlaut and email
+===============================================================================
+From: "Föö Bär" <foo@example.org>
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (label_from)
+      (senders
+        (correspondent
+          (quoted_name)
+          (email_address))))))
+
+===============================================================================
+Unquoted name with Umlaut and email (not RFC-compliant)
+:error
+===============================================================================
+From: Föö Bär <foo@example.org>
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (label_from)
+      (senders
+        (correspondent
+          (name)
+          (email_address))))))

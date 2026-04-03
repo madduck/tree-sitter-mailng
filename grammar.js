@@ -51,8 +51,11 @@ export default grammar({
     _header_separator: $ => seq(":", repeat($._hspace)),
 
     _word: _$ => /\S+/,
-    _word_no_doublequotes: _$ => /[^"\s]+/,
+
+    // https://datatracker.ietf.org/doc/html/rfc5322#section-3.2.3
     _atext: _$ => /[-!#$&'+/=?^_`{|}~\w]+/,
+    _atext_as_nonspecials: _$ => /[[()<>:;@\\/"]]+/,
+    _qtext: _$ => /[^"\\\s]+/,
 
     // Header contents can flow to the next line if such starts with whitespace, which
     // the standard calls "Folding"
@@ -85,11 +88,17 @@ export default grammar({
       // $.name is included in conflicts below such that TS can resolve the
       // ambiguity that arises when $.name is followed by $.whitespace.
       seq(
-        $._atext,
+        // The RFC defines a name to be an atom, or it has to be quoted. However,
+        // mutt and neomutt at least allow for certain Unicode characters that
+        // they won't quote, see e.g.
+        // - https://gitlab.com/muttmua/mutt/-/work_items/519
+        // - https://github.com/neomutt/neomutt/issues/4832
+        // so let's deviate from the RFC and allow both, won't hurt much:
+        choice($._atext, $._atext_as_nonspecials),
         repeat(
           seq(
             $._header_contents_whitespace,
-            $._atext
+            choice($._atext, $._atext_as_nonspecials),
           )
         )
       ),
@@ -97,11 +106,11 @@ export default grammar({
       // prec.right not needed here due to the final quote
       seq(
         '"',
-        $._word_no_doublequotes,
+        $._qtext,
         repeat(
           seq(
             $._header_contents_whitespace,
-            $._word_no_doublequotes
+            $._qtext
           )
         ),
         '"'
