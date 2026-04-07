@@ -279,7 +279,6 @@ From: "Föö Bär" <foo@example.org>
 
 ===============================================================================
 Unquoted name with Umlaut and email (not RFC-compliant)
-:error
 ===============================================================================
 From: Föö Bär <foo@example.org>
 

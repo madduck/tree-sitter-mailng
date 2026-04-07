@@ -54,7 +54,7 @@ export default grammar({
 
     // https://datatracker.ietf.org/doc/html/rfc5322#section-3.2.3
     _atext: _$ => /[-!#$&'+/=?^_`{|}~\w]+/,
-    _atext_as_nonspecials: _$ => /[[()<>:;@\\/"]]+/,
+    _atext_as_nonspecials: _$ => /[^\s[()<>:;@\\/"]]+/,
     _qtext: _$ => /[^"\\\s]+/,
 
     // Header contents can flow to the next line if such starts with whitespace, which
