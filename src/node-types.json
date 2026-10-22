@@ -1,0 +1,425 @@
+[
+  {
+    "type": "body",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "body_separator",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "contents",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "correspondent",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "email_address",
+          "named": true
+        },
+        {
+          "type": "name",
+          "named": true
+        },
+        {
+          "type": "quoted_name",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "date",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "email_address",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "group",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "correspondent",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "header_date",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "date",
+          "named": true
+        },
+        {
+          "type": "label_date",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "header_from",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "label_from",
+          "named": true
+        },
+        {
+          "type": "senders",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "header_inreplyto",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "label_inreplyto",
+          "named": true
+        },
+        {
+          "type": "msgid",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "header_msgid",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "label_msgid",
+          "named": true
+        },
+        {
+          "type": "msgid",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "header_other",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "contents",
+          "named": true
+        },
+        {
+          "type": "label_other",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "header_rcpt",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "label_rcpt",
+          "named": true
+        },
+        {
+          "type": "recipients",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "header_references",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "label_references",
+          "named": true
+        },
+        {
+          "type": "msgid",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "header_replyto",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "label_replyto",
+          "named": true
+        },
+        {
+          "type": "recipients",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "header_subject",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "label_subject",
+          "named": true
+        },
+        {
+          "type": "subject",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "headers",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "header_date",
+          "named": true
+        },
+        {
+          "type": "header_from",
+          "named": true
+        },
+        {
+          "type": "header_inreplyto",
+          "named": true
+        },
+        {
+          "type": "header_msgid",
+          "named": true
+        },
+        {
+          "type": "header_other",
+          "named": true
+        },
+        {
+          "type": "header_rcpt",
+          "named": true
+        },
+        {
+          "type": "header_references",
+          "named": true
+        },
+        {
+          "type": "header_replyto",
+          "named": true
+        },
+        {
+          "type": "header_subject",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "msgid",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "name",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "recipients",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "correspondent",
+          "named": true
+        },
+        {
+          "type": "group",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "rfc5322_message",
+    "named": true,
+    "root": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "body",
+          "named": true
+        },
+        {
+          "type": "body_separator",
+          "named": true
+        },
+        {
+          "type": "headers",
+          "named": true
+        },
+        {
+          "type": "signature",
+          "named": true
+        },
+        {
+          "type": "signature_separator",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "senders",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "correspondent",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "signature",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": "subject",
+    "named": true,
+    "fields": {}
+  },
+  {
+    "type": ",",
+    "named": false
+  },
+  {
+    "type": ":",
+    "named": false
+  },
+  {
+    "type": ";",
+    "named": false
+  },
+  {
+    "type": "label_date",
+    "named": true
+  },
+  {
+    "type": "label_from",
+    "named": true
+  },
+  {
+    "type": "label_inreplyto",
+    "named": true
+  },
+  {
+    "type": "label_msgid",
+    "named": true
+  },
+  {
+    "type": "label_other",
+    "named": true
+  },
+  {
+    "type": "label_rcpt",
+    "named": true
+  },
+  {
+    "type": "label_references",
+    "named": true
+  },
+  {
+    "type": "label_replyto",
+    "named": true
+  },
+  {
+    "type": "label_subject",
+    "named": true
+  },
+  {
+    "type": "quoted_name",
+    "named": true
+  },
+  {
+    "type": "signature_separator",
+    "named": true
+  }
+]
