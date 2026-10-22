@@ -1,0 +1,69 @@
+{
+  "name": "tree-sitter-mailng",
+  "version": "0.1.0",
+  "description": "An RFC5322 (email) message parser for Tree-sitter",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/madduck/tree-sitter-mailng.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "martin f. krafft",
+    "email": "tree-sitter-mailng@pobox.madduck.net"
+  },
+  "main": "bindings/node",
+  "types": "bindings/node/index.d.ts",
+  "keywords": [
+    "incremental",
+    "parsing",
+    "tree-sitter",
+    "mail",
+    "email",
+    "rfc5322"
+  ],
+  "files": [
+    "grammar.js",
+    "queries",
+    "src",
+    "bindings",
+    "binding.gyp",
+    "tree-sitter.json"
+  ],
+  "dependencies": {
+    "node-addon-api": "^8.3.1",
+    "node-gyp-build": "^4.8.4"
+  },
+  "peerDependencies": {
+    "tree-sitter": "^0.25.0"
+  },
+  "peerDependenciesMeta": {
+    "tree-sitter": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "prebuildify": "^6.0.1",
+    "tree-sitter-cli": "^0.26.0"
+  },
+  "scripts": {
+    "install": "node-gyp-build",
+    "prestart": "tree-sitter build --wasm && node-gyp-build",
+    "start": "tree-sitter playground",
+    "test": "tree-sitter test",
+    "test:queries": "tree-sitter query --test queries/mail/highlights.scm -p ."
+  },
+  "tree-sitter": [
+    {
+      "scope": "source.mailng",
+      "file-types": [
+        "mail"
+      ],
+      "injection-regex": "^mail$",
+      "highlights": "queries/mail/highlights.scm",
+      "injections": "queries/mail/injections.scm"
+    }
+  ],
+  "allowScripts": {
+    "tree-sitter-cli@0.26.13": true
+  }
+}
