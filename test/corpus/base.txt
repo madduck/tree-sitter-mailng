@@ -1,0 +1,295 @@
+===============================================================================
+Header & body
+===============================================================================
+From: csp@example.org
+
+body
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (label_from)
+      (senders
+        (correspondent
+          (email_address)))))
+  (body_separator)
+  (body))
+
+===============================================================================
+Subject & body
+===============================================================================
+Subject: subject
+
+body
+
+---
+
+(rfc5322_message
+  (headers
+    (header_subject
+      (label_subject)
+      (subject)))
+  (body_separator)
+  (body))
+
+===============================================================================
+Subject & body with carriage returns
+===============================================================================
+Subject: subject
+
+body
+
+---
+
+(rfc5322_message
+  (headers
+    (header_subject
+      (label_subject)
+      (subject)))
+  (body_separator)
+  (body))
+
+===============================================================================
+Body with whitespace line
+===============================================================================
+Subject: subject
+
+body
+ 
+whitespace above
+
+---
+
+(rfc5322_message
+  (headers
+    (header_subject
+      (label_subject)
+      (subject)))
+  (body_separator)
+  (body))
+
+===============================================================================
+Header fields
+===============================================================================
+From: foo@example.org
+To: bar@example.net, baz@example.net
+Subject: subject
+Date: Tue, 17 Mar 2026 15:27:34 +0100
+Other: other
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (label_from)
+      (senders
+        (correspondent
+          (email_address))))
+    (header_rcpt
+      (label_rcpt)
+      (recipients
+        (correspondent
+          (email_address))
+        (correspondent
+          (email_address))))
+    (header_subject
+      (label_subject)
+      (subject))
+    (header_date
+      (label_date)
+      (date))
+    (header_other
+      (label_other)
+      (contents))))
+
+===============================================================================
+Empty address header field
+===============================================================================
+Bcc:
+
+---
+
+(rfc5322_message
+  (headers
+    (header_rcpt
+      (label_rcpt))))
+
+===============================================================================
+Empty address header field with trailing spaces
+===============================================================================
+Reply-To:
+
+---
+
+(rfc5322_message
+  (headers
+    (header_replyto
+      (label_replyto))))
+
+===============================================================================
+Message ID
+===============================================================================
+Message-Id: <78B93274-7E0E-43D2-B13D-CCD42E3CBD16@example.org>
+
+---
+
+(rfc5322_message
+  (headers
+    (header_msgid
+      (label_msgid)
+      (msgid))))
+
+===============================================================================
+References & In-Reply-To
+===============================================================================
+References: <78B93274-7E0E-43D2-B13D-CCD42E3CBD16@example.org>
+  <madduck/tree-sitter-mailng/check-suites/CS_kwDORoVgGc8AAAAOVSZYvw/1774210595@github.com>
+In-Reply-To: <78B93274-7E0E-43D2-B13D-CCD42E3CBD16@example.org>
+  <madduck/tree-sitter-mailng/check-suites/CS_kwDORoVgGc8AAAAOVSZYvw/1774210595@github.com>
+
+---
+
+(rfc5322_message
+  (headers
+    (header_references
+      (label_references)
+      (msgid)
+      (msgid))
+    (header_inreplyto
+      (label_inreplyto)
+      (msgid)
+      (msgid))))
+
+===============================================================================
+From header is case-insensitive
+===============================================================================
+frOm: foo@example.org
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (label_from)
+      (senders
+        (correspondent
+          (email_address))))))
+
+===============================================================================
+To header is case-insensitive
+===============================================================================
+TO: foo@example.org
+
+---
+
+(rfc5322_message
+  (headers
+    (header_rcpt
+      (label_rcpt)
+      (recipients
+        (correspondent
+          (email_address))))))
+
+===============================================================================
+Subject header is case-insensitive
+===============================================================================
+SuBjEcT: subject
+
+---
+
+(rfc5322_message
+  (headers
+    (header_subject
+      (label_subject)
+      (subject))))
+
+===============================================================================
+Date header is case-insensitive
+===============================================================================
+datE: Tue, 17 Mar 2026 15:27:34 +0100
+
+---
+
+(rfc5322_message
+  (headers
+    (header_date
+      (label_date)
+      (date))))
+
+===============================================================================
+GMT date
+===============================================================================
+Date: Tue, 17 Mar 2026 15:27:34 GMT
+
+---
+
+(rfc5322_message
+  (headers
+    (header_date
+      (label_date)
+      (date))))
+
+===============================================================================
+Date can wrap lines
+===============================================================================
+Date: Tue, 17 Mar 2026
+  15:27:34 GMT
+
+---
+
+(rfc5322_message
+  (headers
+    (header_date
+      (label_date)
+      (date))))
+
+===============================================================================
+Multi-line headers
+===============================================================================
+Subject: Subject multiline across
+  lines
+X-Bar: bar
+  baz
+
+---
+
+(rfc5322_message
+  (headers
+    (header_subject
+      (label_subject)
+      (subject))
+    (header_other
+      (label_other)
+      (contents))))
+
+===============================================================================
+Multi-line headers with trailing whitespace
+===============================================================================
+Subject: Subject multiline across
+  lines 
+
+---
+
+(rfc5322_message
+  (headers
+    (header_subject
+      (label_subject)
+      (subject))))
+
+===============================================================================
+Multi-line headers with trailing empty line
+===============================================================================
+Subject: Subject multiline across
+  lines and a trailing line part of this contents
+  
+
+---
+
+(rfc5322_message
+  (headers
+    (header_subject
+      (label_subject)
+      (subject))))
