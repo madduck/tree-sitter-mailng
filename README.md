@@ -141,6 +141,27 @@ tree-sitter generate
 tree-sitter test
 ```
 
+If you don't want to install anything outside the source tree, install
+[direnv](https://direnv.net) and create a `.envrc` file:
+
+```sh
+$ echo layout node > .envrc
+$ direnv allow
+$ npm install
+  # …
+``
+
+This puts `./node_modules/.bin/tree-sitter` on your `$PATH`.
+
+A `Makefile` wraps the common steps:
+
+```
+
+make generate # regenerate src/ from grammar.js make build # compile the parser
+make test # run the corpus tests make test-queries # run the query tests
+
+```
+
 ## Legalese
 
 The code is © 2026 martin f. krafft <tree-sitter-mailng@pobox.madduck.net>
