@@ -383,16 +383,8 @@
                                 "value": "\\r?\\n"
                               },
                               {
-                                "type": "CHOICE",
-                                "members": [
-                                  {
-                                    "type": "PATTERN",
-                                    "value": "[ \\t]+"
-                                  },
-                                  {
-                                    "type": "BLANK"
-                                  }
-                                ]
+                                "type": "PATTERN",
+                                "value": "[ \\t]+"
                               }
                             ]
                           },
@@ -483,16 +475,8 @@
                                 "value": "\\r?\\n"
                               },
                               {
-                                "type": "CHOICE",
-                                "members": [
-                                  {
-                                    "type": "PATTERN",
-                                    "value": "[ \\t]+"
-                                  },
-                                  {
-                                    "type": "BLANK"
-                                  }
-                                ]
+                                "type": "PATTERN",
+                                "value": "[ \\t]+"
                               }
                             ]
                           },
@@ -748,16 +732,8 @@
                         "value": "\\r?\\n"
                       },
                       {
-                        "type": "CHOICE",
-                        "members": [
-                          {
-                            "type": "PATTERN",
-                            "value": "[ \\t]+"
-                          },
-                          {
-                            "type": "BLANK"
-                          }
-                        ]
+                        "type": "PATTERN",
+                        "value": "[ \\t]+"
                       }
                     ]
                   },
@@ -853,16 +829,8 @@
                         "value": "\\r?\\n"
                       },
                       {
-                        "type": "CHOICE",
-                        "members": [
-                          {
-                            "type": "PATTERN",
-                            "value": "[ \\t]+"
-                          },
-                          {
-                            "type": "BLANK"
-                          }
-                        ]
+                        "type": "PATTERN",
+                        "value": "[ \\t]+"
                       }
                     ]
                   },
@@ -965,16 +933,8 @@
                                       "value": "\\r?\\n"
                                     },
                                     {
-                                      "type": "CHOICE",
-                                      "members": [
-                                        {
-                                          "type": "PATTERN",
-                                          "value": "[ \\t]+"
-                                        },
-                                        {
-                                          "type": "BLANK"
-                                        }
-                                      ]
+                                      "type": "PATTERN",
+                                      "value": "[ \\t]+"
                                     }
                                   ]
                                 },
@@ -1050,16 +1010,8 @@
                                 "value": "\\r?\\n"
                               },
                               {
-                                "type": "CHOICE",
-                                "members": [
-                                  {
-                                    "type": "PATTERN",
-                                    "value": "[ \\t]+"
-                                  },
-                                  {
-                                    "type": "BLANK"
-                                  }
-                                ]
+                                "type": "PATTERN",
+                                "value": "[ \\t]+"
                               }
                             ]
                           },
@@ -1171,16 +1123,8 @@
                           "value": "\\r?\\n"
                         },
                         {
-                          "type": "CHOICE",
-                          "members": [
-                            {
-                              "type": "PATTERN",
-                              "value": "[ \\t]+"
-                            },
-                            {
-                              "type": "BLANK"
-                            }
-                          ]
+                          "type": "PATTERN",
+                          "value": "[ \\t]+"
                         }
                       ]
                     },
@@ -1251,16 +1195,8 @@
                               "value": "\\r?\\n"
                             },
                             {
-                              "type": "CHOICE",
-                              "members": [
-                                {
-                                  "type": "PATTERN",
-                                  "value": "[ \\t]+"
-                                },
-                                {
-                                  "type": "BLANK"
-                                }
-                              ]
+                              "type": "PATTERN",
+                              "value": "[ \\t]+"
                             }
                           ]
                         },

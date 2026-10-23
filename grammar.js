@@ -35,9 +35,12 @@ const HS = /[ \t]+/;
 
 /**
  * Folding white space (RFC5322, section 3.2.2): white space that may be
- * folded, i.e. a line break inserted before any white space.
+ * folded, i.e. a line break inserted before any white space. A fold always
+ * continues with white space, so a bare line break is never folding white
+ * space. Without that requirement, a value such as a display-name would
+ * swallow the following header field as a folded continuation.
  */
-const FWS = choice(seq(optional(HS), CRLF, optional(HS)), HS);
+const FWS = choice(seq(optional(HS), CRLF, HS), HS);
 
 /**
  * A header field value body, without its enclosing line break and without

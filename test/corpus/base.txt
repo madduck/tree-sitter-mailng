@@ -317,3 +317,67 @@ From:
     (header_from
       (label_from))))
 
+===============================================================================
+Correspondents without address
+===============================================================================
+From: csp@example.org
+To: foo
+Subject: bar
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (label_from)
+      (senders
+        (correspondent
+          (email_address))))
+    (header_rcpt
+      (label_rcpt)
+      (recipients
+        (correspondent
+          (name))))
+    (header_subject
+      (label_subject)
+      (subject))))
+
+===============================================================================
+Correspondent without address followed by another header
+===============================================================================
+To: foo
+Subject: bar
+
+---
+
+(rfc5322_message
+  (headers
+    (header_rcpt
+      (label_rcpt)
+      (recipients
+        (correspondent
+          (name))))
+    (header_subject
+      (label_subject)
+      (subject))))
+
+===============================================================================
+Correspondents without address in multiple headers
+===============================================================================
+From: foo
+To: bar
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (label_from)
+      (senders
+        (correspondent
+          (name))))
+    (header_rcpt
+      (label_rcpt)
+      (recipients
+        (correspondent
+          (name))))))
