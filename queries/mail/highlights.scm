@@ -13,8 +13,8 @@
 
 ; === Correspondents ======================================================
 
-(name) @string.special
-(quoted_name) @string
+(name) @string.special.name
+(quoted_name) @string.special.name
 
 (email_address) @string.special.email
 
