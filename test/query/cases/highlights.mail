@@ -3,6 +3,9 @@ To: friends: a@b.org, c@d.org;
 Subject: hello
 Date: Tue, 17 Mar 2026 15:27:34 +0100
 Message-Id: <abc@example.org>
+In-Reply-To: <def@example.org>
+References: <ghi@example.org> <jkl@example.org>
+X-Mailer: Mutt
 
 body text
 

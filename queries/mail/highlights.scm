@@ -27,10 +27,10 @@
 
 ; === Field values ========================================================
 
-(subject) @text.title
+(subject) @markup.bold
 (date) @number
-(msgid) @string.special.url
-(contents) @text
+(msgid) @comment
+(contents) @comment
 
 ; === Body and signature ==================================================
 
