@@ -1,0 +1,17 @@
+keyword	0	0
+string.special	0	6
+string.special.email	0	14
+keyword	1	0
+type	1	4
+string.special.email	1	13
+string.special.email	1	22
+keyword	2	0
+text.title	2	8
+keyword	3	0
+number	3	5
+keyword	4	0
+string.special.url	4	12
+punctuation.delimiter	5	0
+text.literal	6	0
+punctuation.delimiter	8	0
+comment	8	3

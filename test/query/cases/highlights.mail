@@ -1,0 +1,10 @@
+From: Foo Bar <foo@example.org>
+To: friends: a@b.org, c@d.org;
+Subject: hello
+Date: Tue, 17 Mar 2026 15:27:34 +0100
+Message-Id: <abc@example.org>
+
+body text
+
+-- 
+sig text

@@ -20,8 +20,8 @@ test: generate
 	$(TREE_SITTER) test
 
 # Run the query tests.
-test-queries: build
-	$(TREE_SITTER) query --test queries/mail/highlights.scm -p .
+test-queries:
+	sh test/query/run.sh queries/mail/highlights.scm
 
 clean:
 	rm -rf build
