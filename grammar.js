@@ -40,12 +40,13 @@ const HS = /[ \t]+/;
 const FWS = choice(seq(optional(HS), CRLF, optional(HS)), HS);
 
 /**
- * A header field value body, without its enclosing line break. It may span
+ * A header field value body, without its enclosing line break and without
+ * the white space that separates it from the field name. It may span
  * multiple lines by way of folding. The pattern is greedy, so that it
  * consumes as much folded content as possible and leaves the final line
  * break to the enclosing header rule.
  */
-const FIELD_BODY = /[^\n\r](?:[^\n\r]|\r?\n[ \t])*/;
+const FIELD_BODY = /[^ \t\n\r](?:[^\n\r]|\r?\n[ \t])*/;
 
 module.exports = grammar({
   name: 'mail',
@@ -85,13 +86,13 @@ module.exports = grammar({
 
     header_from: $ => seq($.label_from, ':', optional(HS), optional($.senders), $._eol),
     header_rcpt: $ => seq($.label_rcpt, ':', optional(HS), optional($.recipients), $._eol),
-    header_subject: $ => seq($.label_subject, ':', optional($.subject), $._eol),
-    header_date: $ => seq($.label_date, ':', optional($.date), $._eol),
+    header_subject: $ => seq($.label_subject, ':', optional(HS), optional($.subject), $._eol),
+    header_date: $ => seq($.label_date, ':', optional(HS), optional($.date), $._eol),
     header_msgid: $ => seq($.label_msgid, ':', optional(HS), optional($.msgid), $._eol),
     header_references: $ => seq($.label_references, ':', optional(HS), msgidSeq($), $._eol),
     header_inreplyto: $ => seq($.label_inreplyto, ':', optional(HS), msgidSeq($), $._eol),
     header_replyto: $ => seq($.label_replyto, ':', optional(HS), optional($.recipients), $._eol),
-    header_other: $ => seq($.label_other, ':', optional($.contents), $._eol),
+    header_other: $ => seq($.label_other, ':', optional(HS), optional($.contents), $._eol),
 
     // Field names are case-insensitive, so each is spelled out with explicit
     // character classes. Known names take precedence over label_other.
@@ -223,12 +224,12 @@ function msgidSeq($) {
 }
 
 /**
- * A header field value: its leading white space, then the folded body. The
- * body may be empty, so that a field whose value is only white space still
- * gets a value node.
+ * A header field value: the folded body, without the white space that
+ * separates it from the field name. The separating white space is consumed
+ * by the enclosing header rule, so that it is not part of the value.
  *
  * @returns {object} The token rule.
  */
 function fieldValue() {
-  return token(seq(HS, optional(FIELD_BODY)));
+  return token(FIELD_BODY);
 }

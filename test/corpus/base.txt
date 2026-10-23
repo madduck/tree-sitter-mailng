@@ -303,8 +303,7 @@ Subject:
 (rfc5322_message
   (headers
     (header_subject
-      (label_subject)
-      (subject))))
+      (label_subject))))
 
 ===============================================================================
 From with only whitespace

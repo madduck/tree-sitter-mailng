@@ -214,6 +214,18 @@
           "type": "CHOICE",
           "members": [
             {
+              "type": "PATTERN",
+              "value": "[ \\t]+"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
               "type": "SYMBOL",
               "name": "subject"
             },
@@ -238,6 +250,18 @@
         {
           "type": "STRING",
           "value": ":"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "PATTERN",
+              "value": "[ \\t]+"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "CHOICE",
@@ -549,6 +573,18 @@
         {
           "type": "STRING",
           "value": ":"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "PATTERN",
+              "value": "[ \\t]+"
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
           "type": "CHOICE",
@@ -1324,73 +1360,22 @@
     "subject": {
       "type": "TOKEN",
       "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "PATTERN",
-            "value": "[ \\t]+"
-          },
-          {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "PATTERN",
-                "value": "[^\\n\\r](?:[^\\n\\r]|\\r?\\n[ \\t])*"
-              },
-              {
-                "type": "BLANK"
-              }
-            ]
-          }
-        ]
+        "type": "PATTERN",
+        "value": "[^ \\t\\n\\r](?:[^\\n\\r]|\\r?\\n[ \\t])*"
       }
     },
     "date": {
       "type": "TOKEN",
       "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "PATTERN",
-            "value": "[ \\t]+"
-          },
-          {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "PATTERN",
-                "value": "[^\\n\\r](?:[^\\n\\r]|\\r?\\n[ \\t])*"
-              },
-              {
-                "type": "BLANK"
-              }
-            ]
-          }
-        ]
+        "type": "PATTERN",
+        "value": "[^ \\t\\n\\r](?:[^\\n\\r]|\\r?\\n[ \\t])*"
       }
     },
     "contents": {
       "type": "TOKEN",
       "content": {
-        "type": "SEQ",
-        "members": [
-          {
-            "type": "PATTERN",
-            "value": "[ \\t]+"
-          },
-          {
-            "type": "CHOICE",
-            "members": [
-              {
-                "type": "PATTERN",
-                "value": "[^\\n\\r](?:[^\\n\\r]|\\r?\\n[ \\t])*"
-              },
-              {
-                "type": "BLANK"
-              }
-            ]
-          }
-        ]
+        "type": "PATTERN",
+        "value": "[^ \\t\\n\\r](?:[^\\n\\r]|\\r?\\n[ \\t])*"
       }
     },
     "msgid": {
