@@ -22,7 +22,7 @@ for fixture in "$CASES"/*.mail; do
   [ -f "$expected" ] || continue
 
   actual=$(mktemp)
-  "$TREE_SITTER" query --lib-path "$LIB" --lang-name mailng -c \
+  "$TREE_SITTER" query --lib-path "$LIB" --lang-name mail -c \
     "$QUERY" "$fixture" 2>/dev/null |
     sed -n 's/.*capture: [0-9]* - \([^,]*\), start: (\([0-9]*\), \([0-9]*\)).*/\1\t\2\t\3/p' |
     sort > "$actual"
