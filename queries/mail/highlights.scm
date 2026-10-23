@@ -7,13 +7,8 @@
 [
   (label_from)
   (label_rcpt)
-  (label_subject)
   (label_date)
-  (label_msgid)
-  (label_references)
-  (label_inreplyto)
   (label_replyto)
-  (label_other)
 ] @keyword
 
 ; === Correspondents ======================================================
@@ -27,10 +22,16 @@
 
 ; === Field values ========================================================
 
-(subject) @markup.bold
+(header_subject) @text.title
+
+[
+  (header_msgid)
+  (header_inreplyto)
+  (header_references)
+  (header_other)
+] @comment
+
 (date) @number
-(msgid) @comment
-(contents) @comment
 
 ; === Body and signature ==================================================
 
