@@ -2,15 +2,15 @@
   "$schema": "https://tree-sitter.github.io/tree-sitter/assets/schemas/config.schema.json",
   "grammars": [
     {
-      "name": "mailng",
-      "camelcase": "MailNG",
-      "title": "Mail NG",
-      "scope": "source.mailng",
+      "name": "mail",
+      "camelcase": "Mail",
+      "title": "Mail",
+      "scope": "source.mail",
       "file-types": [
         "mail"
       ],
       "injection-regex": "^mail$",
-      "class-name": "TreeSitterMailNG",
+      "class-name": "TreeSitterMail",
       "highlights": "queries/mail/highlights.scm",
       "injections": "queries/mail/injections.scm"
     }

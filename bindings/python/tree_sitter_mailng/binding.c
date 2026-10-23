@@ -2,12 +2,12 @@
 
 typedef struct TSLanguage TSLanguage;
 
-TSLanguage *tree_sitter_mailng(void);
+TSLanguage *tree_sitter_mail(void);
 
 static PyObject *language(PyObject *self, PyObject *args) {
   (void)self;
   (void)args;
-  return PyCapsule_New((void *)tree_sitter_mailng(), NULL, NULL);
+  return PyCapsule_New((void *)tree_sitter_mail(), NULL, NULL);
 }
 
 static PyMethodDef methods[] = {

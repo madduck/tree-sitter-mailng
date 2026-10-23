@@ -83,13 +83,10 @@ Planned features are:
 
 Assuming that you have a working NeoVim with
 [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter), the
-[recommended
-way](https://github.com/nvim-treesitter/nvim-treesitter#adding-custom-languages)
-to include this parser and associate it with the `mail` file type is to place
-the following into your `after/ftplugin/mail.lua`. This will hook into the
-`:TSUpdate` command, but only within a mail file. If you want `TSUpdate` to
-update the parser at any time it's called, then place the hook into a
-non-ftplugin file:
+[recommended way](https://github.com/nvim-treesitter/nvim-treesitter#adding-custom-languages)
+to include this parser is to register it under the language name `mail` and to
+start it for the `mail` file type. Put the registration into a non-ftplugin
+file, for example your `init.lua`. It hooks into the `:TSUpdate` command:
 
 ```Lua
 vim.api.nvim_create_autocmd('User', { pattern = 'TSUpdate',
@@ -98,13 +95,20 @@ callback = function()
     tier = 2, -- Support level: unstable
     install_info = {
       url = 'https://github.com/madduck/tree-sitter-mailng',
-      revision = "main",
+      revision = 'main',
       generate = true,
       generate_from_json = false,
       queries = 'queries/mail',
     },
   }
 end})
+```
+
+Put the start call into your `after/ftplugin/mail.lua`, so that NeoVim uses the
+parser for every mail file. The language name is `mail`:
+
+```Lua
+vim.treesitter.start(0, 'mail')
 ```
 
 Once added, start NeoVim on a mail file and run:

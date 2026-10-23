@@ -5,6 +5,6 @@ import TreeSitterMailNG
 final class TreeSitterMailNGTests: XCTestCase {
   func testCanLoadGrammar() throws {
     let parser = Parser()
-    parser.setLanguage(MailNGLanguage.language())
+    parser.setLanguage(MailLanguage.language())
   }
 }

@@ -3,7 +3,7 @@
 
 TREE_SITTER ?= tree-sitter
 
-.PHONY: all generate build test test-queries clean
+.PHONY: all generate build test test-queries test-language-name clean
 
 all: generate build test
 
@@ -15,9 +15,13 @@ generate:
 build: generate
 	$(TREE_SITTER) build
 
-# Run the corpus tests.
-test: generate
+# Run the corpus tests and the language-name test.
+test: generate test-language-name
 	$(TREE_SITTER) test
+
+# Assert that the language/parser name is "mail".
+test-language-name:
+	sh test/language-name.sh
 
 # Run the query tests.
 test-queries:

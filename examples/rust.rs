@@ -6,7 +6,7 @@ fn main() {
     let mut parser = Parser::new();
     parser
         .set_language(&tree_sitter_mailng::LANGUAGE.into())
-        .expect("load the Mail NG grammar");
+        .expect("load the Mail grammar");
 
     let tree = parser.parse(&code, None).expect("parse the example mail");
     print_tree(tree.root_node(), &code, 0);

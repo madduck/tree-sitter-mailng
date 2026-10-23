@@ -10,6 +10,6 @@ import (
 func TestCanLoadGrammar(t *testing.T) {
 	language := tree_sitter.NewLanguage(tree_sitter_mailng.Language())
 	if language == nil {
-		t.Errorf("Error loading Mail NG grammar")
+		t.Errorf("Error loading Mail grammar")
 	}
 }

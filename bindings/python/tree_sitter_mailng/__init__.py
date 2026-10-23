@@ -1,4 +1,4 @@
-"""Mail NG grammar for Tree-sitter."""
+"""Mail grammar for Tree-sitter."""
 
 from importlib.resources import files as _files
 

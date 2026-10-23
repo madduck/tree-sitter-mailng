@@ -9,7 +9,7 @@ import "C"
 
 import "unsafe"
 
-// Language returns the Tree-sitter language for Mail NG.
+// Language returns the Tree-sitter language for Mail.
 func Language() unsafe.Pointer {
-	return unsafe.Pointer(C.tree_sitter_mailng())
+	return unsafe.Pointer(C.tree_sitter_mail())
 }

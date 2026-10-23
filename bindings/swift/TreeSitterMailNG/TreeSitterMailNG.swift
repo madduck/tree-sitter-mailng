@@ -2,9 +2,9 @@ import CTreeSitterMailNG
 import SwiftTreeSitter
 import TreeSitter
 
-public enum MailNGLanguage {
-  /// The Tree-sitter language for Mail NG.
+public enum MailLanguage {
+  /// The Tree-sitter language for Mail.
   public static func language() -> Language {
-    return Language(language: tree_sitter_mailng())
+    return Language(language: tree_sitter_mail())
   }
 }

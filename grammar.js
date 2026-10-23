@@ -48,7 +48,7 @@ const FWS = choice(seq(optional(HS), CRLF, optional(HS)), HS);
 const FIELD_BODY = /[^\n\r](?:[^\n\r]|\r?\n[ \t])*/;
 
 module.exports = grammar({
-  name: 'mailng',
+  name: 'mail',
 
   extras: $ => [],
 
