@@ -174,8 +174,8 @@ module.exports = grammar({
 
     // === Helpers =========================================================
 
-    // The end of a header field. The field body pattern is greedy, and thus
-    // consumes any trailing white space itself.
+    // The end of a header field. The value patterns are greedy, and thus
+    // consume any trailing white space themselves.
     _eol: _ => CRLF,
   },
 });
@@ -223,10 +223,12 @@ function msgidSeq($) {
 }
 
 /**
- * A header field value: its leading white space, then the folded body.
+ * A header field value: its leading white space, then the folded body. The
+ * body may be empty, so that a field whose value is only white space still
+ * gets a value node.
  *
  * @returns {object} The token rule.
  */
 function fieldValue() {
-  return token(seq(HS, FIELD_BODY));
+  return token(seq(HS, optional(FIELD_BODY)));
 }

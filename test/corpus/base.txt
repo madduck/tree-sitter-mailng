@@ -293,3 +293,28 @@ Subject: Subject multiline across
     (header_subject
       (label_subject)
       (subject))))
+===============================================================================
+Subject with only whitespace
+===============================================================================
+Subject: 
+
+---
+
+(rfc5322_message
+  (headers
+    (header_subject
+      (label_subject)
+      (subject))))
+
+===============================================================================
+From with only whitespace
+===============================================================================
+From: 
+
+---
+
+(rfc5322_message
+  (headers
+    (header_from
+      (label_from))))
+

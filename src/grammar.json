@@ -1331,8 +1331,16 @@
             "value": "[ \\t]+"
           },
           {
-            "type": "PATTERN",
-            "value": "[^\\n\\r](?:[^\\n\\r]|\\r?\\n[ \\t])*"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "[^\\n\\r](?:[^\\n\\r]|\\r?\\n[ \\t])*"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           }
         ]
       }
@@ -1347,8 +1355,16 @@
             "value": "[ \\t]+"
           },
           {
-            "type": "PATTERN",
-            "value": "[^\\n\\r](?:[^\\n\\r]|\\r?\\n[ \\t])*"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "[^\\n\\r](?:[^\\n\\r]|\\r?\\n[ \\t])*"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           }
         ]
       }
@@ -1363,8 +1379,16 @@
             "value": "[ \\t]+"
           },
           {
-            "type": "PATTERN",
-            "value": "[^\\n\\r](?:[^\\n\\r]|\\r?\\n[ \\t])*"
+            "type": "CHOICE",
+            "members": [
+              {
+                "type": "PATTERN",
+                "value": "[^\\n\\r](?:[^\\n\\r]|\\r?\\n[ \\t])*"
+              },
+              {
+                "type": "BLANK"
+              }
+            ]
           }
         ]
       }
